@@ -105,7 +105,7 @@ pyperclip.copy(data_url)
 print(f"{bcolors.OKGREEN}\r\n*** B64 block successfully copied to clipboard !!! ***\r\n{bcolors.ENDC}")
 
 #Kodierte Datei wird zu Testzwecken als Textdatei im Ordner "Textdateien" erzeugt
-outputfile_name = 'C:\\Users\\morit\\OneDrive\\Studium\\6. Semester\\Studienarbeit 2\\Umsetzung\\VSCode\\Dateiuebertragungstool\\Dateiverarbeitung\\Testdateien\\encodedData.txt'
+outputfile_name = 'C:\\Users\\morit\\OneDrive\\Studium\\6. Semester\\Studienarbeit 2\\Umsetzung\\VSCode\\Dateiuebertragungstool\\Dateiverarbeitung\\Testdateien\\encodedFile.txt'
 with open(outputfile_name, "w") as text_file:
         text_file.write(data_url)
         print(f"{bcolors.OKGREEN}\r\n*** Output filename successfully written !!! ***\r\n{bcolors.ENDC}")
