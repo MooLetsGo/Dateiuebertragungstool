@@ -11,12 +11,12 @@ from clipProtocol_v0 import clipProtocol
           
 
 
-def sendFile(inputFile:str):
+def sendFile(inputFile:str, blockLength:int, bufferTime:float):
     #inputFile = "C:/Users/morit/OneDrive/Studium/6_Semester/Studienarbeit 2/Umsetzung/VSCode/Testen/Testen/InputFiles/Cinebench2024_win_x86_64.zip"
     #inputFile = "C:/Users/morit/OneDrive/Studium/6_Semester/Studienarbeit 2/Umsetzung/VSCode/Testen/Testen/InputFiles/VSCode-win32-x64-1.85.1.zip"
     #inputFile = "C:/Users/morit/OneDrive/Studium/6_Semester/Studienarbeit 2/Umsetzung/VSCode/Testen/Testen/InputFiles/Konrad_Moritz_2023-10-10_11-47.xlsx" #Hartkodiert!!
 
-    blockLength = 1048576 #1MB #Hartkodiert!!
+    #blockLength = 1048576 #1MB #Hartkodiert!!
     segmentNumber = 0
     nextBlockPos = 0
 
@@ -31,7 +31,7 @@ def sendFile(inputFile:str):
         checksum = hashlib.sha256(binaryData).hexdigest()
 
     #-----------------------Übertragung Startvorgang---------------------# 
-    protocol1 = clipProtocol()
+    protocol1 = clipProtocol(bufferTime)
     protocol1.sender = True
     #Protokoll - Vorgang abgestimmt mit der Receive Funktion starten
     protocol1.start()

@@ -2,7 +2,7 @@ import pyperclip
 import time
 
 class clipProtocol:
-    def __init__(self):
+    def __init__(self, bufferTime:float):
         self.sender = False
 
         self.actionString_StartSending = "StartSending"
@@ -12,6 +12,8 @@ class clipProtocol:
 
         self.destinationString_Re = "toRe_"
         self.destinationString_Se = "toSe_"
+
+        self.bufferTime = bufferTime
 
 
     def start(self):
@@ -40,7 +42,7 @@ class clipProtocol:
     def wait(self):
         print("Wait...")
         #Pufferzeit
-        time.sleep(0.8)
+        time.sleep(self.bufferTime)
         try:
             tmpClip = pyperclip.paste()
         except:

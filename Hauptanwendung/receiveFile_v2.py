@@ -7,10 +7,10 @@ from clipProtocol_v0 import clipProtocol
 
 
 
-def receiveFile():
-    outputPath = "C:/Users/morit/OneDrive/Studium/6_Semester/Studienarbeit 2/Umsetzung/VSCode/Dateiuebertragungstool/Outputfile" #Hartkodiert!!
+def receiveFile(outputPath:str, blockLength:int, bufferTime:float):
+    #outputPath = "C:/Users/morit/OneDrive/Studium/6_Semester/Studienarbeit 2/Umsetzung/VSCode/Dateiuebertragungstool/Outputfile" #Hartkodiert!!
 
-    blockLength = 1048576 #1MB #Hartkodiert
+    #blockLength = 1048576 #1MB #Hartkodiert
     nextBlockPos = 0
     segmentNumber = 0
 
@@ -25,7 +25,7 @@ def receiveFile():
         pyperclip.copy("")
     except:
         print("Fehler beim schreiben in die Zwischenablage; ID=receiveFile("")")
-    protocol2 = clipProtocol()
+    protocol2 = clipProtocol(bufferTime)
     v = protocol2.wait()
 
     #-------------------Übertragung Datei Informationen------------------#
