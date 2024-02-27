@@ -38,11 +38,11 @@ root.title("Dateiuebertragungstool")
 root.geometry("800x300")
 
 #Initialisierungsdatei erstellen, wenn nicht vorhanden:
-if not os.path.exists(os.path.dirname(os.path.abspath(__file__))+"/dateiuebertragungsTool.ini"):
+if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/dateiuebertragungsTool.ini"):
     try:
         configwriter.configwriter()
     except:
-        print(" *** ERROR: Initialisierungsdatei konnte nicht erstellt werden ***")
+        print("*** ERROR: Initialisierungsdatei konnte nicht erstellt werden ***")
         exit(1)
 
 #Default Settings aus Initialisierungsdatei lesen; Abbruch wenn nicht lesbar oder nicht vorhanden
