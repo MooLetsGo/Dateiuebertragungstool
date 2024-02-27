@@ -14,12 +14,6 @@ def choose_file():
         print(f"Ausgewählte Datei: {file}")
     return file
 
-def choose_filepath():
-    file_path = filedialog.askdirectory(title="Dateipfad auswählen")
-    if file_path:
-        print(f"Ausgewählter Dateipfad: {file_path}")
-    return file_path
-
 def init_sending():
 
     #-------------------------------Auswahl Inputfile---------------------------------------#
@@ -72,7 +66,7 @@ thread1 = threading.Thread(target=receiveFile_v2.receiveFile, args=(outputPath,b
 thread1.daemon = True
 thread1.start()
 
-#Erstellen von Labels:
+#Erstellen von Labels um die Initialisierungseinstellungen anzuzeigen:
 blockLength_label = tk.Label(root, text="Segmentgröße: " + str(blockLength) + "Byte")
 blockLength_label.place(relx = 0.05, rely = 0.6)
 
