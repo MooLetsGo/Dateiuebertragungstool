@@ -2,3 +2,6 @@
 /Hauptanwendung/__pycache__
 ToDo.txt
 dateiuebertragungsTool.ini
+/Hauptanwendung/build
+/Hauptanwendung/dist
+/Hauptanwendung/mainTkinter_v1.spec
