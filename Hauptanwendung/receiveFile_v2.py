@@ -8,15 +8,12 @@ from clipProtocol_v0 import clipProtocol
 
 
 def receiveFile(outputPath:str, blockLength:int, bufferTime:float):
-    #outputPath = "C:/Users/morit/OneDrive/Studium/6_Semester/Studienarbeit 2/Umsetzung/VSCode/Dateiuebertragungstool/Outputfile" #Hartkodiert!!
-
-    #blockLength = 1048576 #1MB #Hartkodiert
     nextBlockPos = 0
     segmentNumber = 0
 
-    #Input Pfad auf Existenz überprüfen
+    #Ausgabe Pfad auf Existenz überprüfen
     if not(os.path.exists(outputPath)):
-        print('*** Warning:  Input file ' +outputPath+' does not exist! ***')
+        print('*** Warning:  Input file ' +  outputPath + ' does not exist! ***')
         sys.exit(2)
     
     #-----------------------Übertragung Startvorgang---------------------#
@@ -24,32 +21,33 @@ def receiveFile(outputPath:str, blockLength:int, bufferTime:float):
     try:
         pyperclip.copy("")
     except:
-        print("Fehler beim schreiben in die Zwischenablage; ID=receiveFile("")")
-    protocol2 = clipProtocol(bufferTime)
-    v = protocol2.wait()
+        print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile("") ***")
+    protocol = clipProtocol(bufferTime)
+    value = protocol.wait()
 
     #-------------------Übertragung Datei Informationen------------------#
-    outputFileName = v
-    v= protocol2.proceed(None)
+    outputFileName = value
+    value = protocol.proceed(None)
+    checksumInput = value
+    value = protocol.proceed(None)
 
+    #Evtl. an dieser Stelle: Wenn schon eine (kaputte) Datei da ist, diese löschen und eine neue leere erstellen
     while True:
-        if v == "exit":
+        if value == "exit":
             break
+
         segmentNumber += 1
         
-        utf8B64_blockData = v
+        utf8B64_blockData = value
+        #Text in B64 kodierten Binärdatenblock umwandeln
         binaryB64_blockData = utf8B64_blockData.encode('utf-8')
         
         #B64 kodierten Binärdatenblock B64 dekodieren
         binary_blockData = base64.b64decode(binaryB64_blockData)
-
-        #Prüfsummenberechnung des Binärdatenblocks
-        checksum1 = hashlib.sha256(binary_blockData).hexdigest()
         
-        #Wenn schon eine (kaputte) Datei da ist, diese löschen und eine neue leere erstellen
-        #Neue Datei Erzeugen
-        if not os.path.exists(outputPath+'/'+outputFileName): 
-            with open(outputPath+'/'+outputFileName, 'wb'): 
+        #Neue leere Datei mit richtigem Namen und Typ Erzeugen
+        if not os.path.exists(outputPath + '/' + outputFileName): 
+            with open(outputPath + '/' + outputFileName, 'wb'): 
                 pass
         #Binärdatenblock an passender Stelle in Neuer Datei einfügen 
         #Datei im Modus 'r+b' öffnen, sodass sowohl aus der Datei gelesen als auch in die Datei geschrieben werden kann.
@@ -58,15 +56,21 @@ def receiveFile(outputPath:str, blockLength:int, bufferTime:float):
             outputFile.seek(nextBlockPos,0)
             outputFile.write(binary_blockData)
         
-        print("Datenblock in neue Datei geschrieben")
+        print("*** Datenblock in neue Datei geschrieben ***")
 
         #Laufvariablen neu berechnen
         nextBlockPos = nextBlockPos + blockLength
 
-        v = protocol2.proceed(None)
+        value = protocol.proceed(None)
         
 
     #Prüfsummenberechnung OutputFile
-    with open(outputPath+'/'+outputFileName, 'rb') as binary_outputFile: 
+    with open(outputPath + '/' + outputFileName, 'rb') as binary_outputFile: 
             binaryData = binary_outputFile.read()
-            checksum = hashlib.sha256(binaryData).hexdigest()
+            checksumOutput = hashlib.sha256(binaryData).hexdigest()
+    if checksumInput == checksumOutput:
+        print("*** Dateiuebertragung erfolgreich beendet ***")
+    else:
+        print("*** ERROR: Uebertragene Datei ungleich Originaldatei ***")
+
+    return
