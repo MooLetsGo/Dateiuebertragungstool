@@ -17,6 +17,3 @@ def configwriter():
     except:
         exit(1)
 
-def modifyConfig():
-    #ToDo#
-    return
