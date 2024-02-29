@@ -18,7 +18,7 @@ def receiveFile(configHandler: configdataHandler):
             pyperclip.copy("")
         except:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile("") ***")
-        protocol = clipProtocol(configHandler.bufferTime)
+        protocol = clipProtocol(configHandler)
         value = protocol.wait()
 
         if configHandler.stopEvent.is_set():
