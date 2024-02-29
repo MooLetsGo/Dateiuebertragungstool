@@ -7,7 +7,7 @@ from configparser import ConfigParser
 import os
 from configdataHandler import configdataHandler
 import math
-import time
+from functools import partial
 
 
 
@@ -97,6 +97,8 @@ class DateiuebertragungsTool:
         self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(configHandler.segmentsSended))
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
 
+        self.updateLabel(5,configHandler)
+
         # Erstellen von Buttons; Send Funktion dem Button "Senden" zuweisen
         send_button = tk.Button(root, text="Senden", command=lambda: self.init_sending(configHandler), width=40, height=8)
         send_button.place(relx=0.95, rely=0.325, anchor=tk.E)
@@ -149,12 +151,15 @@ class DateiuebertragungsTool:
             self.blockLength_label.config(text= "Segmentgröße: " + str(configHandler.blockLength) + " Byte")
         elif index == 1:
             self.bufferTime_label.config(text= "Pufferzeit: " + str(configHandler.bufferTime) + " s")
+        elif index == 2:
+            self.outputPath_label.config(text="Ausgabepfad: " + configHandler.outputPath)
         elif index == 3:
             self.inputFile_label.config(text= "Eingabe Datei: " + configHandler.inputFile)
         elif index == 4:
             self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(configHandler.segmentsToSend))
         elif index == 5:
             self.segmentsSended_label.config(text= "Segmentanzahl gesendet: " + str(configHandler.segmentsSended))
+            self.root.after(500, partial(self.updateLabel, 5, configHandler))
         return
         
     def init_sending(self, configHandler: configdataHandler):
