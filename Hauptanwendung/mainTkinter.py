@@ -164,7 +164,7 @@ class DateiuebertragungsTool:
         
     def init_sending(self, configHandler: configdataHandler):
         #Lokalen Empfangsthread stoppen:
-        #configHandler.stopEvent.set()
+        configHandler.stopEvent.set()
 
         #Sendevorgang starten
         thread2 = threading.Thread(target=sendFile.sendFile, args=( configHandler,))
