@@ -17,7 +17,7 @@ def sendFile(configHandler: configdataHandler):
         exit(1)
 
     #-----------------------Übertragung Startvorgang---------------------# 
-    protocol = clipProtocol(configHandler.bufferTime)
+    protocol = clipProtocol(configHandler)
     protocol.sender = True
     protocol.start()
     
