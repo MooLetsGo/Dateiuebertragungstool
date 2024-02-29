@@ -1,8 +1,9 @@
 import pyperclip
 import time
+from configdataHandler import configdataHandler
 
 class clipProtocol:
-    def __init__(self, bufferTime:float):
+    def __init__(self, configHandler: configdataHandler):
         self.sender = False
 
         self.tmpClip = ""
@@ -15,7 +16,7 @@ class clipProtocol:
         self.destinationString_Re = "toRe_"
         self.destinationString_Se = "toSe_"
 
-        self.bufferTime = bufferTime
+        self.configHandler = configHandler
 
 
     def start(self):
@@ -43,8 +44,10 @@ class clipProtocol:
         
     def wait(self):
         print("*** Wait... ***")
+        if self.configHandler.stopEvent.is_set() and self.sender == False:
+            return
         #Pufferzeit
-        time.sleep(self.bufferTime)
+        time.sleep(self.configHandler.bufferTime)
         try:
             self.tmpClip = pyperclip.paste()
         except:
