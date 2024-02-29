@@ -5,6 +5,8 @@ class clipProtocol:
     def __init__(self, bufferTime:float):
         self.sender = False
 
+        self.tmpClip = ""
+
         self.actionString_StartSending = "StartSending"
         self.actionString_StartReceiving = "StartReceiving"
         self.actionString_Proceed = "Proceed"
@@ -44,30 +46,30 @@ class clipProtocol:
         #Pufferzeit
         time.sleep(self.bufferTime)
         try:
-            tmpClip = pyperclip.paste()
+            self.tmpClip = pyperclip.paste()
         except:
             print("*** ERROR: Fehler beim lesen aus der Zwischenablage; ID=clipProtocol.wait() ***")
         while True:
-            if tmpClip == self.destinationString_Re + self.actionString_StartReceiving and self.sender == False:
+            if self.tmpClip == self.destinationString_Re + self.actionString_StartReceiving and self.sender == False:
                 try:
                     pyperclip.copy(self.destinationString_Se + self.actionString_StartSending)
                 except:
                     print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.wait(toSe) ***")
                 return self.wait()
-            elif tmpClip == self.destinationString_Se + self.actionString_StartSending and self.sender == True:
+            elif self.tmpClip == self.destinationString_Se + self.actionString_StartSending and self.sender == True:
                 break
-            elif tmpClip.split(";")[0] == self.destinationString_Re + self.actionString_Proceed and self.sender == False:
-                return tmpClip.split(";")[1]
-            elif tmpClip == self.destinationString_Se + self.actionString_Proceed and self.sender == True:
+            elif self.tmpClip.split(";")[0] == self.destinationString_Re + self.actionString_Proceed and self.sender == False:
+                return self.tmpClip.split(";")[1]
+            elif self.tmpClip == self.destinationString_Se + self.actionString_Proceed and self.sender == True:
                 break
-            elif tmpClip == self.destinationString_Re + self.actionString_Finish and self.sender == False:
+            elif self.tmpClip == self.destinationString_Re + self.actionString_Finish and self.sender == False:
                 #evtl geeigneterer Text
                 return "exit"
             else:
                 try:
-                    tmpClip = pyperclip.waitForNewPaste(timeout=1)
+                    self.tmpClip = pyperclip.waitForNewPaste(timeout=1)
                 except:
-                    tmpClip = pyperclip.paste()
+                    self.tmpClip = pyperclip.paste()
                     print("*** pyperclip.waitForNewPaste() Timeout raised in clipProtocol.wait() ***")      
         #Evtl. schöner lösen
         return ""
