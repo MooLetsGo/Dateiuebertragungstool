@@ -136,14 +136,32 @@ class DateiuebertragungsTool:
         self.updateLabel(2, configHandler)
         return
     
-    #ToDo - Falscheingaben abfangen!!!
     def read_inputField(self,index:int, configHandler: configdataHandler):
         if index == 0:
-            configHandler.setConfigdata(index,self.blockLength_inputField.get())
-            self.updateLabel(index, configHandler)
+            try:
+                blockLength = self.blockLength_inputField.get()
+                blockLength = int(blockLength)
+                if blockLength > 0:
+                    configHandler.setConfigdata(index,blockLength)
+                    self.updateLabel(index, configHandler)
+                else:
+                    raise ValueError
+            except:
+                print("*** VALUE ERROR: Positive integer Number is needed ***")
+                return
         elif index == 1:
-            configHandler.setConfigdata(index,self.bufferTime_inputField.get())
-            self.updateLabel(index, configHandler)
+            try:
+                bufferTime = self.bufferTime_inputField.get()
+                bufferTime = float(bufferTime)
+                if bufferTime > 0:
+                    configHandler.setConfigdata(index,bufferTime)
+                    self.updateLabel(index, configHandler)
+                    return
+                else:
+                    raise ValueError
+            except:
+                print("*** VALUE ERROR: Positive float Number is needed ***")
+                return
         return
 
 
@@ -165,7 +183,7 @@ class DateiuebertragungsTool:
         
     def init_sending(self, configHandler: configdataHandler):
         #Lokalen Empfangsthread stoppen:
-        configHandler.stopEvent.set()
+        #configHandler.stopEvent.set()
         #Sendevorgang starten
         thread2 = threading.Thread(target=sendFile.sendFile, args=( configHandler,))
         thread2.daemon = True
