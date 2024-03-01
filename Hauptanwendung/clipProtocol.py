@@ -47,7 +47,7 @@ class clipProtocol:
         if self.configHandler.stopEvent.is_set() and self.sender == False:
             return
         #Pufferzeit
-        time.sleep(self.configHandler.bufferTime)
+        time.sleep(self.configHandler.getConfigdata(1))
         try:
             self.tmpClip = pyperclip.paste()
         except:
