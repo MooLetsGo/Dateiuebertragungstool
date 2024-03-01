@@ -20,12 +20,12 @@ class configdataHandler:
         self.lock = threading.Lock()
         self.stopEvent = threading.Event()
     
-    def writeConfig(self):
+    def writeConfigToIni(self):
         config = ConfigParser()
         config["SETTINGS"] = {
-            "blockLength": self.blockLength,
-            "bufferTime": self.bufferTime,
-            "outputPath": self.outputPath,
+            "blockLength": self.getConfigdata(0),
+            "bufferTime": self.getConfigdata(1),
+            "outputPath": self.getConfigdata(2),
         }
         try:
             with open("dateiuebertragungsTool.ini", "w") as file:
@@ -36,46 +36,30 @@ class configdataHandler:
     
     #Errorhandlich noch machen, wenn value Typ und Index nicht zusammenpassen
     def setConfigdata(self, index: int, value):
-        if index == 0:
-            with self.lock:
-                self.blockLength = value
-            self.writeConfig()
-        elif index == 1:
-            with self.lock:
-                self.bufferTime = value
-            self.writeConfig()
-        elif index == 2:
-            with self.lock:
-                self.outputPath = value
-            self.writeConfig()
-        elif index == 3:
-            with self.lock:
-                self.inputFile = value
-        elif index == 4:
-            with self.lock:
-                self.segmentsToSend = value
-        elif index == 5:
-            with self.lock:
-                self.segmentsSended = value
+        configAttributes = {
+            0: "blockLength",
+            1: "bufferTime",
+            2: "outputPath",
+            3: "inputFile",
+            4: "segmentsToSend",
+            5: "segmentsSended",
+        }
+        with self.lock:
+            if index in configAttributes:
+                setattr(self,configAttributes[index],value)
+                if index in [0,1,2]:
+                    self.writeConfigToIni()
         return
 
     def getConfigdata(self, index: int):
-        if index == 0:
-            with self.lock:
-                return self.blockLength
-        elif index == 1:
-            with self.lock:
-                return self.bufferTime
-        elif index == 2:
-            with self.lock:
-                return self.outputPath
-        elif index == 3:
-            with self.lock:
-                return self.inputFile
-        elif index == 4:
-            with self.lock:
-                return self.segmentsToSend
-        elif index == 5:
-            with self.lock:
-                return self.segmentsSended
-        return
+        configAttributes = {
+            0: self.blockLength,
+            1: self.bufferTime,
+            2: self.outputPath,
+            3: self.inputFile,
+            4: self.segmentsToSend,
+            5: self.segmentsSended,
+        }
+        with self.lock:
+            print(configAttributes.get(index,None))
+            return configAttributes.get(index,None)
