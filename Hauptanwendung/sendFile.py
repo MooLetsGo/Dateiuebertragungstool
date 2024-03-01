@@ -1,5 +1,4 @@
 import base64
-import os.path
 import hashlib
 import filetype
 from clipProtocol import clipProtocol
@@ -8,31 +7,32 @@ from configdataHandler import configdataHandler
 
 def sendFile(configHandler: configdataHandler):
 
-    segmentNumber = 0
+    inputFile = configHandler.getConfigdata(3)
+    blockLength = configHandler.getConfigdata(0)
     nextBlockPos = 0
+    segmentNumber = 0
 
     #-----------------------Übertragung Startvorgang---------------------# 
     protocol = clipProtocol(configHandler)
     protocol.sender = True
     protocol.start()
     
-
     #-------------------Übertragung Datei Informationen------------------#
     #Ermittlung und Prüfung des Dateityps
-    kind = filetype.guess(configHandler.inputFile)
+    kind = filetype.guess(inputFile)
     if kind is None:
         print('*** ERROR Invalid filetype ! ***')
         exit(1)     
     else:
         inputfileType = kind.extension 
     #Ermittlung des Dateinamens
-    pathList = configHandler.inputFile.split('.')[0].split('/')
+    pathList = inputFile.split('.')[0].split('/')
     inputfileName = pathList[len(pathList)-1]
 
     outputFileName = inputfileName + "." + inputfileType
     protocol.proceed(outputFileName)
     #Prüfsummenberechnung Inputfile
-    with open(configHandler.inputFile, 'rb') as binary_inputFile:
+    with open(inputFile, 'rb') as binary_inputFile:
         binaryData = binary_inputFile.read()
         checksumInput = hashlib.sha256(binaryData).hexdigest()
     protocol.proceed(checksumInput)
@@ -42,14 +42,14 @@ def sendFile(configHandler: configdataHandler):
     while True:
         #Binärdatenblock des InputFiles generieren 
         segmentNumber += 1
-        with open(configHandler.inputFile, 'rb') as binary_inputFile:
+        with open(inputFile, 'rb') as binary_inputFile:
             binary_inputFile.seek(nextBlockPos,0)
-            binary_blockData = binary_inputFile.read(configHandler.blockLength)
+            binary_blockData = binary_inputFile.read(blockLength)
             if not binary_blockData:
                 protocol.finish()
                 break
         #Laufvariablen neu berechnen
-        nextBlockPos = nextBlockPos + configHandler.blockLength
+        nextBlockPos = nextBlockPos + blockLength
         #Binärdatenblock B64 kodieren
         binaryB64_blockData = base64.b64encode(binary_blockData)
         #B64 kodierten Binärdatenblock in Text umwandeln 
