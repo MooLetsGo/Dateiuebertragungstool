@@ -78,25 +78,24 @@ class DateiuebertragungsTool:
         self.chooseOutputPath_Button.place(relx = 0.05, rely=0.55, relheight=0.1, relwidth=0.29)
 
         #Labels um die Konfigurationseinstellungen anzuzeigen:
-        self.blockLength_label = tk.Label(root, text="Segmentgröße: " + str(configHandler.blockLength) + " Byte")
+        self.blockLength_label = tk.Label(root, text="Segmentgröße: " + str(configHandler.getConfigdata(0)) + " Byte")
         self.blockLength_label.place(relx = 0.05, rely = 0.675)
 
-        self.bufferTime_label = tk.Label(root, text="Pufferzeit: " + str(configHandler.bufferTime) + " s")
+        self.bufferTime_label = tk.Label(root, text="Pufferzeit: " + str(configHandler.getConfigdata(1)) + " s")
         self.bufferTime_label.place(relx = 0.05, rely = 0.75)
 
-        self.inputFile_label = tk.Label(root, text="Eingabe Datei: " + configHandler.inputFile)
+        self.inputFile_label = tk.Label(root, text="Eingabe Datei: " + configHandler.getConfigdata(3))
         self.inputFile_label.place(relx = 0.05, rely = 0.825)
 
-        self.outputPath_label = tk.Label(root, text="Ausgabepfad: " + configHandler.outputPath)
+        self.outputPath_label = tk.Label(root, text="Ausgabepfad: " + configHandler.getConfigdata(2))
         self.outputPath_label.place(relx = 0.05, rely = 0.9)
 
         #Label um die Segmentanzahl (verbleibend und übertragen) anzuzeigen:
-        self.segmentsToSend_label = tk.Label(root, text= "Segmentanzahl gesamt: " + str(configHandler.segmentsToSend))
+        self.segmentsToSend_label = tk.Label(root, text= "Segmentanzahl gesamt: " + str(configHandler.getConfigdata(4)))
         self.segmentsToSend_label.place(relx = 0.5, rely = 0.675)
 
-        self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(configHandler.segmentsSended))
+        self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata(5)))
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
-
         self.updateLabel(5,configHandler)
 
         # Erstellen von Buttons; Send Funktion dem Button "Senden" zuweisen
@@ -153,17 +152,17 @@ class DateiuebertragungsTool:
     #Todo Zugriff auf configHandler Daten korrekt machen
     def updateLabel(self, index: int, configHandler: configdataHandler):
         if index == 0:
-            self.blockLength_label.config(text= "Segmentgröße: " + str(configHandler.blockLength) + " Byte")
+            self.blockLength_label.config(text= "Segmentgröße: " + str(configHandler.getConfigdata(0)) + " Byte")
         elif index == 1:
-            self.bufferTime_label.config(text= "Pufferzeit: " + str(configHandler.bufferTime) + " s")
+            self.bufferTime_label.config(text= "Pufferzeit: " + str(configHandler.getConfigdata(1)) + " s")
         elif index == 2:
-            self.outputPath_label.config(text="Ausgabepfad: " + configHandler.outputPath)
+            self.outputPath_label.config(text="Ausgabepfad: " + configHandler.getConfigdata(2))
         elif index == 3:
-            self.inputFile_label.config(text= "Eingabe Datei: " + configHandler.inputFile)
+            self.inputFile_label.config(text= "Eingabe Datei: " + configHandler.getConfigdata(3))
         elif index == 4:
-            self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(configHandler.segmentsToSend))
+            self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(configHandler.getConfigdata(4)))
         elif index == 5:
-            self.segmentsSended_label.config(text= "Segmentanzahl gesendet: " + str(configHandler.segmentsSended))
+            self.segmentsSended_label.config(text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata(5)))
             self.root.after(500, partial(self.updateLabel, 5, configHandler))
         return
         
@@ -176,8 +175,6 @@ class DateiuebertragungsTool:
         thread2.daemon = True
         thread2.start()
         return
-
-    
 
     #-----------------------------Hauptfunktion--------------------------------------#
 
