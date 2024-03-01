@@ -2,7 +2,7 @@ from configparser import ConfigParser
 import threading
 
 #blockLength = Index 0
-#bufferTimer = Index 1
+#bufferTime = Index 1
 #outputPath = Index 2
 #inputFile = Index 3
 #segmentsToSend = Index 4
@@ -61,5 +61,4 @@ class configdataHandler:
             5: self.segmentsSended,
         }
         with self.lock:
-            print(configAttributes.get(index,None))
             return configAttributes.get(index,None)
