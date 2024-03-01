@@ -38,13 +38,11 @@ class DateiuebertragungsTool:
             except:
                 print("Konfigurationseinstellungen konnten nicht übernommen werden")
                 exit(1)
-
             blockLength = int(configData["blockLength"])
             bufferTime = float(configData["bufferTime"])
             outputPath = configData["outputPath"]
 
             configHandler = configdataHandler(blockLength, bufferTime, outputPath)
-
         else:
             exit(1)
         
@@ -116,7 +114,6 @@ class DateiuebertragungsTool:
         except:
             exit(1)
 
-
     def choose_file(self, configHandler: configdataHandler):
         file = filedialog.askopenfilename(title="Datei auswählen")
         if file:
@@ -148,8 +145,8 @@ class DateiuebertragungsTool:
             configHandler.setConfigdata(index,self.bufferTime_inputField.get())
             self.updateLabel(index, configHandler)
         return
-    
-    #Todo Zugriff auf configHandler Daten korrekt machen
+
+
     def updateLabel(self, index: int, configHandler: configdataHandler):
         if index == 0:
             self.blockLength_label.config(text= "Segmentgröße: " + str(configHandler.getConfigdata(0)) + " Byte")
@@ -169,7 +166,6 @@ class DateiuebertragungsTool:
     def init_sending(self, configHandler: configdataHandler):
         #Lokalen Empfangsthread stoppen:
         configHandler.stopEvent.set()
-
         #Sendevorgang starten
         thread2 = threading.Thread(target=sendFile.sendFile, args=( configHandler,))
         thread2.daemon = True
