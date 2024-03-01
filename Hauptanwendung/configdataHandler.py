@@ -47,8 +47,8 @@ class configdataHandler:
         with self.lock:
             if index in configAttributes:
                 setattr(self,configAttributes[index],value)
-                if index in [0,1,2]:
-                    self.writeConfigToIni()
+        if index in [0,1,2]:
+            self.writeConfigToIni()
         return
 
     def getConfigdata(self, index: int):
