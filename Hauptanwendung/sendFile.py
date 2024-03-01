@@ -11,11 +11,6 @@ def sendFile(configHandler: configdataHandler):
     segmentNumber = 0
     nextBlockPos = 0
 
-    #Input Pfad auf Existenz überprüfen
-    if not(os.path.exists(configHandler.inputFile)):
-        print('*** Warning:  Input file ' + configHandler.inputFile +' does not exist! ***')
-        exit(1)
-
     #-----------------------Übertragung Startvorgang---------------------# 
     protocol = clipProtocol(configHandler)
     protocol.sender = True

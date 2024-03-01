@@ -122,7 +122,9 @@ class DateiuebertragungsTool:
         file = filedialog.askopenfilename(title="Datei auswählen")
         if file:
             print(f"Ausgewählte Datei: {file}")
-        #evtl. Existenzüberprüfung
+        if not(os.path.exists(file)):
+            print('*** Warning:  Input file ' + file +' does not exist! ***')
+            exit(1)
         configHandler.setConfigdata(3, file)
         configHandler.setConfigdata(4, math.ceil(os.path.getsize(file)/configHandler.getConfigdata(0)))
         self.updateLabel(3,configHandler)
@@ -130,8 +132,11 @@ class DateiuebertragungsTool:
         return
 
     def choose_filepath(self, configHandler: configdataHandler):
-        file_path = filedialog.askdirectory(title="Dateipfad auswählen")
-        configHandler.setConfigdata(2, file_path)
+        filepath = filedialog.askdirectory(title="Dateipfad auswählen")
+        if not(os.path.exists(filepath)):
+            print('*** Warning: Outputpath ' + filepath +' does not exist! ***')
+            exit(1)
+        configHandler.setConfigdata(2, filepath)
         self.updateLabel(2, configHandler)
         return
     
