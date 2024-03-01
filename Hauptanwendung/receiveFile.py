@@ -9,6 +9,9 @@ from configdataHandler import configdataHandler
 
 def receiveFile(configHandler: configdataHandler):
     while True:
+
+        outputPath = configHandler.getConfigdata(2)
+        blockLength = configHandler.getConfigdata(0)
         nextBlockPos = 0
         segmentNumber = 0
 
@@ -46,26 +49,26 @@ def receiveFile(configHandler: configdataHandler):
             binary_blockData = base64.b64decode(binaryB64_blockData)
             
             #Neue leere Datei mit richtigem Namen und Typ Erzeugen
-            if not os.path.exists(configHandler.outputPath + '/' + outputFileName): 
-                with open(configHandler.outputPath + '/' + outputFileName, 'wb'): 
+            if not os.path.exists(outputPath + '/' + outputFileName): 
+                with open(outputPath + '/' + outputFileName, 'wb'): 
                     pass
             #Binärdatenblock an passender Stelle in Neuer Datei einfügen 
             #Datei im Modus 'r+b' öffnen, sodass sowohl aus der Datei gelesen als auch in die Datei geschrieben werden kann.
             #Das lesen ist wichtig, damit die seek() Funktion funktioniert 
-            with open(configHandler.outputPath + '/' + outputFileName, 'r+b') as outputFile: 
+            with open(outputPath + '/' + outputFileName, 'r+b') as outputFile: 
                 outputFile.seek(nextBlockPos,0)
                 outputFile.write(binary_blockData)
             
             print("*** Datenblock in neue Datei geschrieben ***")
 
             #Laufvariablen neu berechnen
-            nextBlockPos = nextBlockPos + configHandler.blockLength
+            nextBlockPos = nextBlockPos + blockLength
 
             value = protocol.proceed(None)
             
 
         #Prüfsummenberechnung OutputFile
-        with open(configHandler.outputPath + '/' + outputFileName, 'rb') as binary_outputFile: 
+        with open(outputPath + '/' + outputFileName, 'rb') as binary_outputFile: 
                 binaryData = binary_outputFile.read()
                 checksumOutput = hashlib.sha256(binaryData).hexdigest()
         if checksumInput == checksumOutput:
