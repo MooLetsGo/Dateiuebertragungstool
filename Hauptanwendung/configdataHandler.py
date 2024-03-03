@@ -19,15 +19,6 @@ class configdataHandler:
         self.segmentsSended = 0
         self.lock = threading.Lock()
         self.stopEvent = threading.Event()
-
-        self.configHandlerAttr = {
-            0: "blockLength",
-            1: "bufferTime",
-            2: "outputPath",
-            3: "inputFile",
-            4: "segmentsToSend",
-            5: "segmentsSended",
-        }
     
     def writeConfigToIni(self):
         config = ConfigParser()
