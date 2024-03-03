@@ -10,7 +10,7 @@ from configdataHandler import configdataHandler
 def receiveFile(configHandler: configdataHandler):
     while True:
 
-        outputPath = configHandler.getConfigdata(2)
+        outputPath = ""
         blockLength = configHandler.getConfigdata(0)
         nextBlockPos = 0
         segmentNumber = 0
@@ -29,6 +29,7 @@ def receiveFile(configHandler: configdataHandler):
             break
 
         #-------------------Übertragung Datei Informationen------------------#
+        outputPath = configHandler.getConfigdata(2)
         outputFileName = value
         value = protocol.proceed(None)
         checksumInput = value
