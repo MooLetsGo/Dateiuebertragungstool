@@ -56,7 +56,7 @@ class DateiuebertragungsTool:
         self.blockLength_inputField_label.place(relx = 0.05, rely = 0.05)
         self.blockLength_inputField = tk.Entry(root)
         self.blockLength_inputField.place(relx = 0.05, rely = 0.125, relheight= 0.1, relwidth=0.22)
-        self.blockLength_okButton = tk.Button(root, text = "Ok", command=lambda: self.read_inputField(0,configHandler))
+        self.blockLength_okButton = tk.Button(root, text = "Ok", command=lambda: self.read_inputField("blockLength",configHandler))
         self.blockLength_okButton.place(relx = 0.275, rely=0.125, relheight=0.1)
 
         #Eingabefeld für Pufferzeit
@@ -64,7 +64,7 @@ class DateiuebertragungsTool:
         self.bufferTime_inputField_label.place(relx = 0.05, rely = 0.225)
         self.bufferTime_inputField = tk.Entry(root)
         self.bufferTime_inputField.place(relx = 0.05, rely = 0.3, relheight= 0.1, relwidth=0.22)
-        self.bufferTime_okButton = tk.Button(root, text = "Ok", command=lambda: self.read_inputField(1,configHandler))
+        self.bufferTime_okButton = tk.Button(root, text = "Ok", command=lambda: self.read_inputField("bufferTime",configHandler))
         self.bufferTime_okButton.place(relx = 0.275, rely=0.3, relheight=0.1)
 
         #Eingabefeld für InputFile
@@ -76,23 +76,23 @@ class DateiuebertragungsTool:
         self.chooseOutputPath_Button.place(relx = 0.05, rely=0.55, relheight=0.1, relwidth=0.29)
 
         #Labels um die Konfigurationseinstellungen anzuzeigen:
-        self.blockLength_label = tk.Label(root, text="Segmentgröße: " + str(configHandler.getConfigdata(0)) + " Byte")
+        self.blockLength_label = tk.Label(root, text="Segmentgröße: " + str(configHandler.getConfigdata("blockLength")) + " Byte")
         self.blockLength_label.place(relx = 0.05, rely = 0.675)
 
-        self.bufferTime_label = tk.Label(root, text="Pufferzeit: " + str(configHandler.getConfigdata(1)) + " s")
+        self.bufferTime_label = tk.Label(root, text="Pufferzeit: " + str(configHandler.getConfigdata("bufferTime")) + " s")
         self.bufferTime_label.place(relx = 0.05, rely = 0.75)
 
-        self.inputFile_label = tk.Label(root, text="Eingabe Datei: " + configHandler.getConfigdata(3))
+        self.inputFile_label = tk.Label(root, text="Eingabe Datei: " + configHandler.getConfigdata("inputFile"))
         self.inputFile_label.place(relx = 0.05, rely = 0.825)
 
-        self.outputPath_label = tk.Label(root, text="Ausgabepfad: " + configHandler.getConfigdata(2))
+        self.outputPath_label = tk.Label(root, text="Ausgabepfad: " + configHandler.getConfigdata("outputPath"))
         self.outputPath_label.place(relx = 0.05, rely = 0.9)
 
         #Label um die Segmentanzahl (verbleibend und übertragen) anzuzeigen:
-        self.segmentsToSend_label = tk.Label(root, text= "Segmentanzahl gesamt: " + str(configHandler.getConfigdata(4)))
+        self.segmentsToSend_label = tk.Label(root, text= "Segmentanzahl gesamt: " + str(configHandler.getConfigdata("segmentsToSend")))
         self.segmentsToSend_label.place(relx = 0.5, rely = 0.675)
 
-        self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata(5)))
+        self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata("segmentsSended")))
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
         self.updateLabel(5,configHandler)
 
@@ -121,10 +121,10 @@ class DateiuebertragungsTool:
         if not(os.path.exists(file)):
             print('*** Warning:  Input file ' + file +' does not exist! ***')
             exit(1)
-        configHandler.setConfigdata(3, file)
-        configHandler.setConfigdata(4, math.ceil(os.path.getsize(file)/configHandler.getConfigdata(0)))
-        self.updateLabel(3,configHandler)
-        self.updateLabel(4,configHandler)
+        configHandler.setConfigdata("inputFile", file)
+        configHandler.setConfigdata("segmentsToSend", math.ceil(os.path.getsize(file)/configHandler.getConfigdata("blockLength")))
+        self.updateLabel("inputFile",configHandler)
+        self.updateLabel("segmentsToSend",configHandler)
         return
 
     def choose_filepath(self, configHandler: configdataHandler):
@@ -132,30 +132,32 @@ class DateiuebertragungsTool:
         if not(os.path.exists(filepath)):
             print('*** Warning: Outputpath ' + filepath +' does not exist! ***')
             exit(1)
-        configHandler.setConfigdata(2, filepath)
-        self.updateLabel(2, configHandler)
+        configHandler.setConfigdata("outputPath", filepath)
+        self.updateLabel("outputPath", configHandler)
         return
     
-    def read_inputField(self,index:int, configHandler: configdataHandler):
-        if index == 0:
+    def read_inputField(self,configAttr:str, configHandler: configdataHandler):
+        if configAttr == "blockLength":
             try:
                 blockLength = self.blockLength_inputField.get()
                 blockLength = int(blockLength)
                 if blockLength > 0:
-                    configHandler.setConfigdata(index,blockLength)
-                    self.updateLabel(index, configHandler)
+                    configHandler.setConfigdata(configAttr,blockLength)
+                    configHandler.setConfigdata("segmentsToSend", math.ceil(os.path.getsize(configHandler.inputFile)/configHandler.getConfigdata("blockLength")))
+                    self.updateLabel("blockLength", configHandler)
+                    self.updateLabel("segmentsToSend", configHandler)
                 else:
                     raise ValueError
             except:
                 print("*** VALUE ERROR: Positive integer Number is needed ***")
                 return
-        elif index == 1:
+        elif configAttr == "bufferTime":
             try:
                 bufferTime = self.bufferTime_inputField.get()
                 bufferTime = float(bufferTime)
                 if bufferTime > 0:
-                    configHandler.setConfigdata(index,bufferTime)
-                    self.updateLabel(index, configHandler)
+                    configHandler.setConfigdata(configAttr,bufferTime)
+                    self.updateLabel("bufferTime", configHandler)
                     return
                 else:
                     raise ValueError
@@ -165,20 +167,20 @@ class DateiuebertragungsTool:
         return
 
 
-    def updateLabel(self, index: int, configHandler: configdataHandler):
-        if index == 0:
-            self.blockLength_label.config(text= "Segmentgröße: " + str(configHandler.getConfigdata(0)) + " Byte")
-        elif index == 1:
-            self.bufferTime_label.config(text= "Pufferzeit: " + str(configHandler.getConfigdata(1)) + " s")
-        elif index == 2:
-            self.outputPath_label.config(text="Ausgabepfad: " + configHandler.getConfigdata(2))
-        elif index == 3:
-            self.inputFile_label.config(text= "Eingabe Datei: " + configHandler.getConfigdata(3))
-        elif index == 4:
-            self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(configHandler.getConfigdata(4)))
-        elif index == 5:
-            self.segmentsSended_label.config(text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata(5)))
-            self.root.after(500, partial(self.updateLabel, 5, configHandler))
+    def updateLabel(self, configAttr: str, configHandler: configdataHandler):
+        if configAttr == "blockLength":
+            self.blockLength_label.config(text= "Segmentgröße: " + str(configHandler.getConfigdata("blockLength")) + " Byte")
+        elif configAttr == "bufferTime":
+            self.bufferTime_label.config(text= "Pufferzeit: " + str(configHandler.getConfigdata("bufferTime")) + " s")
+        elif configAttr == "outputPath":
+            self.outputPath_label.config(text="Ausgabepfad: " + configHandler.getConfigdata("outputPath"))
+        elif configAttr == "inputFile":
+            self.inputFile_label.config(text= "Eingabe Datei: " + configHandler.getConfigdata("inputFile"))
+        elif configAttr == "segmentsToSend":
+            self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(configHandler.getConfigdata("segmentsToSend")))
+        elif configAttr == "segmentsSended":
+            self.segmentsSended_label.config(text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata("segmentsSended")))
+            self.root.after(500, partial(self.updateLabel, "segmentsSended", configHandler))
         return
         
     def init_sending(self, configHandler: configdataHandler):

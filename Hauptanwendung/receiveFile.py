@@ -9,9 +9,7 @@ from configdataHandler import configdataHandler
 
 def receiveFile(configHandler: configdataHandler):
     while True:
-
-        outputPath = ""
-        blockLength = configHandler.getConfigdata(0)
+        
         nextBlockPos = 0
         segmentNumber = 0
 
@@ -27,9 +25,10 @@ def receiveFile(configHandler: configdataHandler):
         if configHandler.stopEvent.is_set():
             print("*** Local receiveFile Function killed ***")
             break
-
+        #-------------------Festlegen der configdata Werte-------------------#
+        outputPath = configHandler.getConfigdata("outputPath")
+        blockLength = configHandler.getConfigdata("blockLength")
         #-------------------Übertragung Datei Informationen------------------#
-        outputPath = configHandler.getConfigdata(2)
         outputFileName = value
         value = protocol.proceed(None)
         checksumInput = value

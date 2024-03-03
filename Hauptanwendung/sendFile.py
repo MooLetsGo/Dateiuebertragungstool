@@ -7,8 +7,8 @@ from configdataHandler import configdataHandler
 
 def sendFile(configHandler: configdataHandler):
 
-    inputFile = configHandler.getConfigdata(3)
-    blockLength = configHandler.getConfigdata(0)
+    inputFile = configHandler.getConfigdata("inputFile")
+    blockLength = configHandler.getConfigdata("blockLength")
     nextBlockPos = 0
     segmentNumber = 0
 
@@ -55,7 +55,7 @@ def sendFile(configHandler: configdataHandler):
         #B64 kodierten Binärdatenblock in Text umwandeln 
         utf8B64_blockData = binaryB64_blockData.decode('utf-8')
 
-        configHandler.setConfigdata(5,segmentNumber)
+        configHandler.setConfigdata("segmentsSended",segmentNumber)
         #B64 kodierten Textblock in die Zwischenablage schreiben
         protocol.proceed(utf8B64_blockData)
     

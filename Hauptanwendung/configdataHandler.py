@@ -19,13 +19,22 @@ class configdataHandler:
         self.segmentsSended = 0
         self.lock = threading.Lock()
         self.stopEvent = threading.Event()
+
+        self.configHandlerAttr = {
+            0: "blockLength",
+            1: "bufferTime",
+            2: "outputPath",
+            3: "inputFile",
+            4: "segmentsToSend",
+            5: "segmentsSended",
+        }
     
     def writeConfigToIni(self):
         config = ConfigParser()
         config["SETTINGS"] = {
-            "blockLength": self.getConfigdata(0),
-            "bufferTime": self.getConfigdata(1),
-            "outputPath": self.getConfigdata(2),
+            "blockLength": self.getConfigdata("blockLength"),
+            "bufferTime": self.getConfigdata("bufferTime"),
+            "outputPath": self.getConfigdata("outputPath"),
         }
         try:
             with open("dateiuebertragungsTool.ini", "w") as file:
@@ -34,31 +43,14 @@ class configdataHandler:
         except:
             exit(1)
     
-    #Errorhandlich noch machen, wenn value Typ und Index nicht zusammenpassen
-    def setConfigdata(self, index: int, value):
-        configAttributes = {
-            0: "blockLength",
-            1: "bufferTime",
-            2: "outputPath",
-            3: "inputFile",
-            4: "segmentsToSend",
-            5: "segmentsSended",
-        }
+    #Errorhandling noch machen, wenn value Typ und Index nicht zusammenpassen
+    def setConfigdata(self, configAttr: str, value):
         with self.lock:
-            if index in configAttributes:
-                setattr(self,configAttributes[index],value)
-        if index in [0,1,2]:
+            setattr(self,configAttr,value)
+        if configAttr == "blockLength" or configAttr == "bufferTime" or configAttr == "outputPath":
             self.writeConfigToIni()
         return
 
-    def getConfigdata(self, index: int):
-        configAttributes = {
-            0: self.blockLength,
-            1: self.bufferTime,
-            2: self.outputPath,
-            3: self.inputFile,
-            4: self.segmentsToSend,
-            5: self.segmentsSended,
-        }
+    def getConfigdata(self, configAttr: str):
         with self.lock:
-            return configAttributes.get(index,None)
+            return getattr(self,configAttr)
