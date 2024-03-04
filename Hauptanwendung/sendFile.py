@@ -6,14 +6,14 @@ from configdataHandler import configdataHandler
 
 
 def sendFile(configHandler: configdataHandler):
-
+    #----------------------------Init Variablen--------------------------#
     inputFile = configHandler.getConfigdata("inputFile")
     blockLength = configHandler.getConfigdata("blockLength")
+    protocol = clipProtocol(configHandler)
     nextBlockPos = 0
     segmentNumber = 0
 
     #-----------------------Übertragung Startvorgang---------------------# 
-    protocol = clipProtocol(configHandler)
     protocol.sender = True
     protocol.start()
     
@@ -28,7 +28,6 @@ def sendFile(configHandler: configdataHandler):
     #Ermittlung des Dateinamens
     pathList = inputFile.split('.')[0].split('/')
     inputfileName = pathList[len(pathList)-1]
-
     outputFileName = inputfileName + "." + inputfileType
     protocol.proceed(outputFileName)
     #Prüfsummenberechnung Inputfile
@@ -54,9 +53,9 @@ def sendFile(configHandler: configdataHandler):
         binaryB64_blockData = base64.b64encode(binary_blockData)
         #B64 kodierten Binärdatenblock in Text umwandeln 
         utf8B64_blockData = binaryB64_blockData.decode('utf-8')
-
+        #Zuweisung von segmentNumber an configHandler.segmentsSended
         configHandler.setConfigdata("segmentsSended",segmentNumber)
         #B64 kodierten Textblock in die Zwischenablage schreiben
         protocol.proceed(utf8B64_blockData)
-    
+
     return

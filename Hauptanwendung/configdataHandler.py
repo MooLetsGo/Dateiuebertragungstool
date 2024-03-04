@@ -33,8 +33,7 @@ class configdataHandler:
                 return
         except:
             exit(1)
-    
-    #Errorhandling noch machen, wenn value Typ und Index nicht zusammenpassen
+
     def setConfigdata(self, configAttr: str, value):
         with self.lock:
             setattr(self,configAttr,value)

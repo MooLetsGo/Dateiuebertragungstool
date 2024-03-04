@@ -18,7 +18,6 @@ class clipProtocol:
 
         self.configHandler = configHandler
 
-
     def start(self):
         try:
             pyperclip.copy(self.destinationString_Re + self.actionString_StartReceiving)
@@ -66,15 +65,13 @@ class clipProtocol:
             elif self.tmpClip == self.destinationString_Se + self.actionString_Proceed and self.sender == True:
                 break
             elif self.tmpClip == self.destinationString_Re + self.actionString_Finish and self.sender == False:
-                #evtl geeigneterer Text
                 return "exit"
             else:
                 try:
                     self.tmpClip = pyperclip.waitForNewPaste(timeout=1)
                 except:
                     self.tmpClip = pyperclip.paste()
-                    print("*** pyperclip.waitForNewPaste() Timeout raised in clipProtocol.wait() ***")      
-        #Evtl. schöner lösen
+                    print("*** pyperclip.waitForNewPaste() Timeout raised in clipProtocol.wait() ***")
         return ""
     
     def finish(self):
