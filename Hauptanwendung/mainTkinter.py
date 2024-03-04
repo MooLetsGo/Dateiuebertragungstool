@@ -88,7 +88,7 @@ class DateiuebertragungsTool:
         #Label Segmentanzahl gesendet
         self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(configHandler.getConfigdata("segmentsSended")))
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
-        self.updateLabel(5,configHandler)
+        self.updateLabel("segmentsSended",configHandler)
         #Button Senden
         send_button = tk.Button(root, text="Senden", command=lambda: self.init_sending(configHandler), width=40, height=8)
         send_button.place(relx=0.95, rely=0.325, anchor=tk.E)
