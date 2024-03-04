@@ -12,6 +12,7 @@ def sendFile(configHandler: configdataHandler):
     protocol = clipProtocol(configHandler)
     nextBlockPos = 0
     segmentNumber = 0
+    inputfileName = ""
 
     #-----------------------Übertragung Startvorgang---------------------# 
     protocol.sender = True
@@ -26,9 +27,12 @@ def sendFile(configHandler: configdataHandler):
     else:
         inputfileType = kind.extension 
     #Ermittlung des Dateinamens
-    pathList = inputFile.split('.')[0].split('/')
+    inputFilePointSplitted = inputFile.split('.')
+    for v in inputFilePointSplitted[0:len(inputFilePointSplitted)-1]:
+        inputfileName += (v + ".")
+    pathList = inputfileName.split('/')
     inputfileName = pathList[len(pathList)-1]
-    outputFileName = inputfileName + "." + inputfileType
+    outputFileName = inputfileName + inputfileType
     protocol.proceed(outputFileName)
     #Prüfsummenberechnung Inputfile
     with open(inputFile, 'rb') as binary_inputFile:
