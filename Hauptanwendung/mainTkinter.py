@@ -6,6 +6,7 @@ import receiveFile
 from configparser import ConfigParser
 import os
 from configdataHandler import configdataHandler
+from clipProtocol import clipProtocol
 import math
 from functools import partial
 
@@ -44,8 +45,12 @@ class DateiuebertragungsTool:
         else:
             exit(1)
         
+        #Protokoll Instanzen für die sendFile() und receiveFile() Funktionen initialisieren
+        protocolSender = clipProtocol(configHandler)
+        protocolReceiver = clipProtocol(configHandler)
+
         #receiveFile() separatem Thread zuweisen und starten
-        self.thread1 = threading.Thread(target=receiveFile.receiveFile, args=(configHandler,))
+        self.thread1 = threading.Thread(target=receiveFile.receiveFile, args=(configHandler, protocolReceiver))
         self.thread1.daemon = True
         self.thread1.start()
 
@@ -90,7 +95,7 @@ class DateiuebertragungsTool:
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
         self.updateLabel("segmentsSended",configHandler)
         #Button Senden
-        send_button = tk.Button(root, text="Senden", command=lambda: self.init_sending(configHandler), width=40, height=8)
+        send_button = tk.Button(root, text="Senden", command=lambda: self.init_sending(configHandler,protocolSender), width=40, height=8)
         send_button.place(relx=0.95, rely=0.325, anchor=tk.E)
 
     #--------------------------------Hilfsmethoden-----------------------------------#
@@ -181,11 +186,11 @@ class DateiuebertragungsTool:
             self.root.after(500, partial(self.updateLabel, "segmentsSended", configHandler))
         return
         
-    def init_sending(self, configHandler: configdataHandler):
+    def init_sending(self, configHandler: configdataHandler, protocol: clipProtocol):
         #Lokalen Empfangsthread stoppen:
-        configHandler.stopEvent.set()
+        #configHandler.stopEvent.set()
         #Sendevorgang starten
-        thread2 = threading.Thread(target=sendFile.sendFile, args=( configHandler,))
+        thread2 = threading.Thread(target=sendFile.sendFile, args=( configHandler, protocol))
         thread2.daemon = True
         thread2.start()
         return
