@@ -3,8 +3,8 @@ import time
 from configdataHandler import configdataHandler
 
 class clipProtocol:
-    def __init__(self, configHandler: configdataHandler):
-        self.sender = False
+    def __init__(self, isSender: bool, configHandler: configdataHandler):
+        self.sender = isSender
 
         self.tmpClip = ""
 
@@ -19,6 +19,7 @@ class clipProtocol:
         self.configHandler = configHandler
         self.goSleep = False
         self.sleeps = False
+        self.transmissionRuns = False
 
     def start(self):
         try:
