@@ -165,7 +165,7 @@ class DateiuebertragungsTool:
         return
         
     def init_sending(self):
-        if self.protocolSender.transmissionRuns == True or self.protocolReceiver == True:
+        if self.protocolSender.transmissionRuns == True or self.protocolReceiver.transmissionRuns == True:
             print("*** WARNING: Transmission is already running ***")
             return
         if self.configHandler.getConfigdata("inputFile") == "":

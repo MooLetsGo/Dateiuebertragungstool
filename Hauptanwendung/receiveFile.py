@@ -34,7 +34,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         value = protocol.proceed(None)
         checksumInput = value
         value = protocol.proceed(None)
-        configHandler.setConfigdata("segmentsToSend",value)
+        configHandler.setConfigdata("segmentsToSend",int(value))
         value = protocol.proceed(None)
 
         #--------------------Übertragung Inputfile Daten---------------------#

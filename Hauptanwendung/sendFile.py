@@ -66,4 +66,5 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         protocol.proceed(utf8B64_blockData)
 
     protocol.transmissionRuns = False
+    protocol.goSleep = False
     return
