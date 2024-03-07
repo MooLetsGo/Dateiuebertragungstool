@@ -187,20 +187,22 @@ def main():
             exit(1)
 
     #Default Settings aus Initialisierungsdatei lesen und ein Objekt der Klasse "configdataHandler" damit initialisieren
-    if os.path.isfile("dateiuebertragungsTool.ini"):
-        config = ConfigParser()
-        config.read("dateiuebertragungsTool.ini")
-        try:
-            configData = config["SETTINGS"]
-        except:
-            print("Konfigurationseinstellungen konnten nicht übernommen werden")
-            exit(1)
-        blockLength = int(configData["blockLength"])
-        bufferTime = float(configData["bufferTime"])
-        outputPath = configData["outputPath"]
+    try:
+        if os.path.isfile("dateiuebertragungsTool.ini"):
+            config = ConfigParser()
+            config.read("dateiuebertragungsTool.ini")
+            try:
+                configData = config["SETTINGS"]
+            except:
+                print("Konfigurationseinstellungen konnten nicht übernommen werden")
+                exit(1)
+            blockLength = int(configData["blockLength"])
+            bufferTime = float(configData["bufferTime"])
+            outputPath = configData["outputPath"]
 
-        configHandler = configdataHandler(blockLength, bufferTime, outputPath)
-    else:
+            configHandler = configdataHandler(blockLength, bufferTime, outputPath)
+    except:
+        print("*** ERROR: Objekt vom Typ configdataHandler konnte nicht erstellt werden ***")
         exit(1)
     #Protokoll Instanzen für die sendFile() und receiveFile() Funktionen initialisieren
     protocolSender = clipProtocol(True,configHandler)
