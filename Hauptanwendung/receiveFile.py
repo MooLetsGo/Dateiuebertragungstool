@@ -7,12 +7,11 @@ from configdataHandler import configdataHandler
 
 
 
-def receiveFile(configHandler: configdataHandler):
+def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
     while True:
         #----------------------------Init Variablen--------------------------#
         nextBlockPos = 0
         segmentNumber = 0
-        protocol = clipProtocol(configHandler)
 
         #-----------------------Übertragung Startvorgang---------------------#
         try:
