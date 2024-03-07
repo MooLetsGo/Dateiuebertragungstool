@@ -164,10 +164,11 @@ class DateiuebertragungsTool:
         #Lokalen Empfangsthread stoppen:
         #configHandler.stopEvent.set()
         setattr(self.protocolReceiver,"goSleep",True)
-        #Sendevorgang starten
-        thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
-        thread2.daemon = True
-        thread2.start()
+        if self.protocolReceiver.sleeps == True:
+            #Sendevorgang starten
+            thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
+            thread2.daemon = True
+            thread2.start()
         return
 
 def main():
