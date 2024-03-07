@@ -92,6 +92,7 @@ class clipProtocol:
     
     def finish(self):
         try:
+            print("*** Alle Segmente wurden versendet ***")
             pyperclip.copy(self.destinationString_Re + self.actionString_Finish)
         except:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clip.Protocol.finish(toRe) ***")
