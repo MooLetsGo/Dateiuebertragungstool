@@ -109,10 +109,13 @@ class DateiuebertragungsTool:
 
     def choose_file(self, configHandler: configdataHandler):
         file = filedialog.askopenfilename(title="Datei auswählen")
+        if file == "":
+            print('*** INFO: Operation "choose Inputfile" was cancelled! ***')
+            return
         if file:
             print(f"Ausgewählte Datei: {file}")
         if not(os.path.exists(file)):
-            print('*** Warning:  Input file ' + file +' does not exist! ***')
+            print('*** ERROR:  Input file ' + file +' does not exist! ***')
             exit(1)
         configHandler.setConfigdata("inputFile", file)
         configHandler.setConfigdata("segmentsToSend", math.ceil(os.path.getsize(file)/configHandler.getConfigdata("blockLength")))
@@ -122,8 +125,11 @@ class DateiuebertragungsTool:
 
     def choose_filepath(self, configHandler: configdataHandler):
         filepath = filedialog.askdirectory(title="Dateipfad auswählen")
+        if filepath == "":
+            print('*** INFO: Operation "choose Outputfilepath" was cancelled! ***')
+            return
         if not(os.path.exists(filepath)):
-            print('*** Warning: Outputpath ' + filepath +' does not exist! ***')
+            print('*** ERROR: Outputpath ' + filepath +' does not exist! ***')
             exit(1)
         configHandler.setConfigdata("outputPath", filepath)
         self.updateLabel("outputPath", configHandler)
