@@ -158,7 +158,7 @@ class DateiuebertragungsTool:
             self.inputFile_label.config(text= "Eingabe Datei: " + self.configHandler.getConfigdata("inputFile"))
         elif configAttr == "segmentsToSend":
             self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(self.configHandler.getConfigdata("segmentsToSend")))
-            self.root.after(500, partial(self.updateLabel, "segmentToSend"))
+            self.root.after(500, partial(self.updateLabel, "segmentsToSend"))
         elif configAttr == "segmentsSended":
             self.segmentsSended_label.config(text= "Segmentanzahl übertragen: " + str(self.configHandler.getConfigdata("segmentsSended")))
             self.root.after(300, partial(self.updateLabel, "segmentsSended"))
