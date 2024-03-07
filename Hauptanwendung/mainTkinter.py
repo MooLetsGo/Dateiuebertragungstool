@@ -15,7 +15,7 @@ def generateIni():
     config["SETTINGS"] = {
         "blockLength": 1048576,
         "bufferTime": 0.8,
-        "outputPath":  os.path.join(os.path.expanduser("~"), "Desktop"), #Desktop des lokalen Systems wird als Standard Ausgabepfad festgelegt
+        "outputPath":  os.path.join(os.path.expanduser("~")), 
     }
     try:
         with open("dateiuebertragungsTool.ini", "w") as file:
@@ -172,12 +172,12 @@ class DateiuebertragungsTool:
             print("*** WARNING: No Inputfile selected! ***")
             return
         #Lokalen Empfangsthread stoppen:
-        #setattr(self.protocolReceiver,"goSleep",True)
-       # if self.protocolReceiver.sleeps == True:
-        #Sendevorgang starten
-        thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
-        thread2.daemon = True
-        thread2.start()
+        setattr(self.protocolReceiver,"goSleep",True)
+        if self.protocolReceiver.sleeps == True:
+            #Sendevorgang starten
+            thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
+            thread2.daemon = True
+            thread2.start()
         return
 
 def main():
