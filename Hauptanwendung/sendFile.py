@@ -38,6 +38,7 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         binaryData = binary_inputFile.read()
         checksumInput = hashlib.sha256(binaryData).hexdigest()
     protocol.proceed(checksumInput)
+    protocol.proceed(configdataHandler.getConfigdata("segmentsToSend"))
 
     #-------------------Übertragung Inputfile Daten---------------------#
     #InputFile blockweise Einlesen und aus den Datenblöcken B64 kodierten Text generieren

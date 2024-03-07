@@ -12,6 +12,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         #----------------------------Init Variablen--------------------------#
         nextBlockPos = 0
         segmentNumber = 0
+        value = ""
 
         #-----------------------Übertragung Startvorgang---------------------#
         try:
@@ -28,6 +29,8 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         outputFileName = value
         value = protocol.proceed(None)
         checksumInput = value
+        value = protocol.proceed(None)
+        configHandler.setConfigdata("segmentsToSend",value)
         value = protocol.proceed(None)
 
         #--------------------Übertragung Inputfile Daten---------------------#
