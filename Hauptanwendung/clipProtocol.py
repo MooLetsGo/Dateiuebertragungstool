@@ -17,6 +17,7 @@ class clipProtocol:
         self.destinationString_Se = "toSe_"
 
         self.configHandler = configHandler
+        self.goSleep = False
 
     def start(self):
         try:
@@ -43,8 +44,6 @@ class clipProtocol:
         
     def wait(self):
         print("*** Wait... ***")
-        if self.configHandler.stopEvent.is_set() and self.sender == False:
-            return
         #Pufferzeit
         time.sleep(self.configHandler.getConfigdata("bufferTime"))
         try:
@@ -52,6 +51,14 @@ class clipProtocol:
         except:
             print("*** ERROR: Fehler beim lesen aus der Zwischenablage; ID=clipProtocol.wait() ***")
         while True:
+            if self.goSleep == True:
+                print("*** Local receiveFile Function went sleep ***")
+                self.sleep()
+                print("*** Local receiveFile Function woke up ***")
+                try:
+                    pyperclip.copy("lootsgnugartrebeuietaD")
+                except:
+                    print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.wait(initString) ***")
             if self.tmpClip == self.destinationString_Re + self.actionString_StartReceiving and self.sender == False:
                 try:
                     pyperclip.copy(self.destinationString_Se + self.actionString_StartSending)
@@ -73,6 +80,12 @@ class clipProtocol:
                     self.tmpClip = pyperclip.paste()
                     print("*** pyperclip.waitForNewPaste() Timeout raised in clipProtocol.wait() ***")
         return ""
+    
+    def sleep(self):
+        while True:
+            if self.goSleep == False:
+                return
+            time.sleep(1)
     
     def finish(self):
         try:
