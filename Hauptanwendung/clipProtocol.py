@@ -19,7 +19,6 @@ class clipProtocol:
         self.configHandler = configHandler
         self.goSleep = False
         self.sleeps = False
-        self.transmissionRuns = False
 
     def start(self):
         try:
@@ -84,12 +83,14 @@ class clipProtocol:
         return ""
     
     def sleep(self):
-        self.sleeps = True
         while True:
-            if self.goSleep == False:
+            self.sleeps = True
+            if self.configHandler.getConfigdata("transmissionRuns") == False:
+                self.goSleep = False
                 self.sleeps = False
-                return
+                break
             time.sleep(1)
+        return
     
     def finish(self):
         try:

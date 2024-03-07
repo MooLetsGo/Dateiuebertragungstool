@@ -18,6 +18,7 @@ class configdataHandler:
         self.segmentsToSend = 0
         self.segmentsSended = 0
         self.lock = threading.Lock()
+        self.transmissionRuns = False
     
     def writeConfigToIni(self):
         config = ConfigParser()

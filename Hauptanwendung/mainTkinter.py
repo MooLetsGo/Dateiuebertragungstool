@@ -165,19 +165,22 @@ class DateiuebertragungsTool:
         return
         
     def init_sending(self):
-        if self.protocolSender.transmissionRuns == True or self.protocolReceiver.transmissionRuns == True:
+        if self.configHandler.getConfigdata("transmissionRuns") == True:
             print("*** WARNING: Transmission is already running ***")
             return
         if self.configHandler.getConfigdata("inputFile") == "":
             print("*** WARNING: No Inputfile selected! ***")
             return
+        self.configHandler.setConfigdata("transmissionRuns",True)
         #Lokalen Empfangsthread stoppen:
         setattr(self.protocolReceiver,"goSleep",True)
-        if self.protocolReceiver.sleeps == True:
-            #Sendevorgang starten
-            thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
-            thread2.daemon = True
-            thread2.start()
+        while True:
+            if self.protocolReceiver.sleeps== True:
+                break
+        #Sendevorgang starten
+        thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
+        thread2.daemon = True
+        thread2.start()
         return
 
 def main():

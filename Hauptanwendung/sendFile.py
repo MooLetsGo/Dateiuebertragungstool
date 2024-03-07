@@ -6,7 +6,6 @@ from configdataHandler import configdataHandler
 
 
 def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
-    protocol.transmissionRuns = True
     #----------------------------Init Variablen--------------------------#
     inputFile = configHandler.getConfigdata("inputFile")
     blockLength = configHandler.getConfigdata("blockLength")
@@ -65,6 +64,5 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         #B64 kodierten Textblock in die Zwischenablage schreiben
         protocol.proceed(utf8B64_blockData)
 
-    protocol.transmissionRuns = False
-    protocol.goSleep = False
+    configHandler.setConfigdata("transmissionRuns",False)
     return
