@@ -15,7 +15,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
 
         #-----------------------Übertragung Startvorgang---------------------#
         try:
-            pyperclip.copy("")
+            pyperclip.copy("lootsgnugartrebeuietaD")
         except:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile("") ***")
         value = protocol.wait()
