@@ -19,6 +19,8 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
     protocol.start()
     
     #-------------------Übertragung Datei Informationen------------------#
+    #Vorgabe der Segmentgröße
+    protocol.proceed(str(blockLength))
     #Ermittlung und Prüfung des Dateityps
     kind = filetype.guess(inputFile)
     if kind is None:
