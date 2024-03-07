@@ -6,15 +6,16 @@ from configdataHandler import configdataHandler
 
 
 def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
+    protocol.transmissionRuns = True
     #----------------------------Init Variablen--------------------------#
     inputFile = configHandler.getConfigdata("inputFile")
     blockLength = configHandler.getConfigdata("blockLength")
+    segmentsToSend = configHandler.getConfigdata("segmentsToSend")
     nextBlockPos = 0
     segmentNumber = 0
     inputfileName = ""
 
     #-----------------------Übertragung Startvorgang---------------------# 
-    protocol.sender = True
     protocol.start()
     
     #-------------------Übertragung Datei Informationen------------------#
@@ -38,7 +39,7 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         binaryData = binary_inputFile.read()
         checksumInput = hashlib.sha256(binaryData).hexdigest()
     protocol.proceed(checksumInput)
-    protocol.proceed(configdataHandler.getConfigdata("segmentsToSend"))
+    protocol.proceed(segmentsToSend)
 
     #-------------------Übertragung Inputfile Daten---------------------#
     #InputFile blockweise Einlesen und aus den Datenblöcken B64 kodierten Text generieren
@@ -62,4 +63,5 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         #B64 kodierten Textblock in die Zwischenablage schreiben
         protocol.proceed(utf8B64_blockData)
 
+    protocol.transmissionRuns = False
     return

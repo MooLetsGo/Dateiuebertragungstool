@@ -20,7 +20,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         except:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile(initString) ***")
         value = protocol.wait()
-
+        protocol.transmissionRuns = True
         #----------------Init Variablen für configdata Werte-----------------#
         outputPath = configHandler.getConfigdata("outputPath")
         blockLength = configHandler.getConfigdata("blockLength")
@@ -70,4 +70,4 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         else:
             print("*** ERROR: Uebertragene Datei ungleich Originaldatei ***")
 
-    return
+        protocol.transmissionRuns = False
