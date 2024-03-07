@@ -64,6 +64,7 @@ class DateiuebertragungsTool:
         #Label für Segmentgröße
         self.blockLength_label = tk.Label(root, text="Segmentgröße: " + str(self.configHandler.getConfigdata("blockLength")) + " Byte")
         self.blockLength_label.place(relx = 0.05, rely = 0.675)
+        self.updateLabel("blockLength")
         #Label für Pufferzeit
         self.bufferTime_label = tk.Label(root, text="Pufferzeit: " + str(self.configHandler.getConfigdata("bufferTime")) + " s")
         self.bufferTime_label.place(relx = 0.05, rely = 0.75)
@@ -76,6 +77,7 @@ class DateiuebertragungsTool:
         #Label Segmentanzahl gesamt
         self.segmentsToSend_label = tk.Label(root, text= "Segmentanzahl gesamt: " + str(self.configHandler.getConfigdata("segmentsToSend")))
         self.segmentsToSend_label.place(relx = 0.5, rely = 0.675)
+        self.updateLabel("segmentsToSend")
         #Label Segmentanzahl gesendet
         self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl übertragen: " + str(self.configHandler.getConfigdata("segmentsSended")))
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
@@ -147,6 +149,7 @@ class DateiuebertragungsTool:
     def updateLabel(self, configAttr: str):
         if configAttr == "blockLength":
             self.blockLength_label.config(text= "Segmentgröße: " + str(self.configHandler.getConfigdata("blockLength")) + " Byte")
+            self.root.after(400, partial(self.updateLabel, "blockLength"))
         elif configAttr == "bufferTime":
             self.bufferTime_label.config(text= "Pufferzeit: " + str(self.configHandler.getConfigdata("bufferTime")) + " s")
         elif configAttr == "outputPath":
@@ -155,9 +158,10 @@ class DateiuebertragungsTool:
             self.inputFile_label.config(text= "Eingabe Datei: " + self.configHandler.getConfigdata("inputFile"))
         elif configAttr == "segmentsToSend":
             self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(self.configHandler.getConfigdata("segmentsToSend")))
+            self.root.after(500, partial(self.updateLabel, "segmentToSend"))
         elif configAttr == "segmentsSended":
             self.segmentsSended_label.config(text= "Segmentanzahl übertragen: " + str(self.configHandler.getConfigdata("segmentsSended")))
-            self.root.after(500, partial(self.updateLabel, "segmentsSended"))
+            self.root.after(300, partial(self.updateLabel, "segmentsSended"))
         return
         
     def init_sending(self):
