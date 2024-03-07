@@ -17,11 +17,8 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         try:
             pyperclip.copy("lootsgnugartrebeuietaD")
         except:
-            print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile("") ***")
+            print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile(initString) ***")
         value = protocol.wait()
-        if configHandler.stopEvent.is_set():
-            print("*** Local receiveFile Function killed ***")
-            break
 
         #----------------Init Variablen für configdata Werte-----------------#
         outputPath = configHandler.getConfigdata("outputPath")
