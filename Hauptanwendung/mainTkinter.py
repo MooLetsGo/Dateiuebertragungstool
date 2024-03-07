@@ -77,7 +77,7 @@ class DateiuebertragungsTool:
         self.segmentsToSend_label = tk.Label(root, text= "Segmentanzahl gesamt: " + str(self.configHandler.getConfigdata("segmentsToSend")))
         self.segmentsToSend_label.place(relx = 0.5, rely = 0.675)
         #Label Segmentanzahl gesendet
-        self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl gesendet: " + str(self.configHandler.getConfigdata("segmentsSended")))
+        self.segmentsSended_label = tk.Label(root, text= "Segmentanzahl übertragen: " + str(self.configHandler.getConfigdata("segmentsSended")))
         self.segmentsSended_label.place(relx = 0.5, rely = 0.75)
         self.updateLabel("segmentsSended")
         #Button Senden
@@ -156,13 +156,15 @@ class DateiuebertragungsTool:
         elif configAttr == "segmentsToSend":
             self.segmentsToSend_label.config(text= "Segmentanzahl gesamt: " + str(self.configHandler.getConfigdata("segmentsToSend")))
         elif configAttr == "segmentsSended":
-            self.segmentsSended_label.config(text= "Segmentanzahl gesendet: " + str(self.configHandler.getConfigdata("segmentsSended")))
+            self.segmentsSended_label.config(text= "Segmentanzahl übertragen: " + str(self.configHandler.getConfigdata("segmentsSended")))
             self.root.after(500, partial(self.updateLabel, "segmentsSended"))
         return
         
     def init_sending(self):
+        if self.configHandler.getConfigdata("inputFile") == "":
+            print("*** WARNING: No Inputfile selected! ***")
+            return
         #Lokalen Empfangsthread stoppen:
-        #configHandler.stopEvent.set()
         setattr(self.protocolReceiver,"goSleep",True)
         if self.protocolReceiver.sleeps == True:
             #Sendevorgang starten
