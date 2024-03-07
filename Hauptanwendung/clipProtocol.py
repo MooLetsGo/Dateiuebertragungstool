@@ -72,7 +72,13 @@ class clipProtocol:
                 return self.tmpClip.split(";")[1]
             elif self.tmpClip == self.destinationString_Se + self.actionString_Proceed and self.sender == True:
                 break
+            elif self.tmpClip == self.destinationString_Se + self.actionString_Finish and self.sender == True:
+                break
             elif self.tmpClip == self.destinationString_Re + self.actionString_Finish and self.sender == False:
+                try:
+                    pyperclip.copy(self.destinationString_Se + self.actionString_Finish)
+                except:
+                    print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.wait(toSe_finish) ***")
                 return "exit"
             else:
                 try:
@@ -98,4 +104,5 @@ class clipProtocol:
             pyperclip.copy(self.destinationString_Re + self.actionString_Finish)
         except:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clip.Protocol.finish(toRe) ***")
+        self.wait()
         return

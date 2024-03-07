@@ -64,5 +64,6 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         #B64 kodierten Textblock in die Zwischenablage schreiben
         protocol.proceed(utf8B64_blockData)
 
+    print("*** Function sendFile() finished! ***")
     configHandler.setConfigdata("transmissionRuns",False)
     return
