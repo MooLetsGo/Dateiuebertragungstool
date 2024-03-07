@@ -5,11 +5,10 @@ from clipProtocol import clipProtocol
 from configdataHandler import configdataHandler
 
 
-def sendFile(configHandler: configdataHandler):
+def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
     #----------------------------Init Variablen--------------------------#
     inputFile = configHandler.getConfigdata("inputFile")
     blockLength = configHandler.getConfigdata("blockLength")
-    protocol = clipProtocol(configHandler)
     nextBlockPos = 0
     segmentNumber = 0
     inputfileName = ""
