@@ -56,6 +56,8 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
             print("*** Datenblock in neue Datei geschrieben ***")
             #Laufvariablen neu berechnen
             nextBlockPos = nextBlockPos + blockLength
+            #Zuweisung von segmentNumber an configHandler.segmentsSended
+            configHandler.setConfigdata("segmentsSended",segmentNumber)
             #Warten auf nächstes Segment
             value = protocol.proceed(None)
             
