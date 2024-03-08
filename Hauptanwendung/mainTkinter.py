@@ -123,7 +123,10 @@ class DateiuebertragungsTool:
                 blockLength = int(blockLength)
                 if blockLength > 0:
                     self.configHandler.setConfigdata(configHandlerAttr,blockLength)
-                    self.configHandler.setConfigdata(configdataHandler.SEGMENTS_TO_SEND, math.ceil(os.path.getsize(self.configHandler.inputFile)/self.configHandler.getConfigdata(configdataHandler.BLOCK_LENGTH)))
+                    try:
+                        self.configHandler.setConfigdata(configdataHandler.SEGMENTS_TO_SEND, math.ceil(os.path.getsize(self.configHandler.inputFile)/self.configHandler.getConfigdata(configdataHandler.BLOCK_LENGTH)))
+                    except:
+                        pass
                     self.updateLabel(configdataHandler.BLOCK_LENGTH)
                     self.updateLabel(configdataHandler.SEGMENTS_TO_SEND)
                 else:
