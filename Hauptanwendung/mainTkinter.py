@@ -13,9 +13,9 @@ from functools import partial
 def generateIni():
     config = ConfigParser()
     config["SETTINGS"] = {
-        "blockLength": 1048576,
-        "bufferTime": 0.8,
-        "outputPath":  os.path.join(os.path.expanduser("~")), 
+        configdataHandler.BLOCK_LENGTH: 1048576,
+        configdataHandler.BUFFER_TIME: 0.8,
+        configdataHandler.OUTPUT_PATH:  os.path.join(os.path.expanduser("~")), 
     }
     try:
         with open("dateiuebertragungsTool.ini", "w") as file:
@@ -201,11 +201,11 @@ def main():
             try:
                 configData = config["SETTINGS"]
             except:
-                print("Konfigurationseinstellungen konnten nicht übernommen werden")
+                print("*** Konfigurationseinstellungen konnten nicht übernommen werden ***")
                 exit(1)
-            blockLength = int(configData["blockLength"])
-            bufferTime = float(configData["bufferTime"])
-            outputPath = configData["outputPath"]
+            blockLength = int(configData[configdataHandler.BLOCK_LENGTH])
+            bufferTime = float(configData[configdataHandler.BUFFER_TIME])
+            outputPath = configData[configdataHandler.OUTPUT_PATH]
 
             configHandler = configdataHandler(blockLength, bufferTime, outputPath)
     except:

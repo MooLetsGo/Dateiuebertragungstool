@@ -30,8 +30,8 @@ class configdataHandler:
     def __init__(self, default_blockLength: int, default_bufferTime: float, default_outputPath: str ):
         self.blockLength = default_blockLength
         self.bufferTime = default_bufferTime
-        self.inputFile = ""
         self.outputPath = default_outputPath
+        self.inputFile = ""
         self.segmentsToSend = 0
         self.segmentsSended = 0
         self.transmissionRuns = False
@@ -41,9 +41,9 @@ class configdataHandler:
     def writeConfigToIni(self):
         config = ConfigParser()
         config["SETTINGS"] = {
-            "blockLength": self.getConfigdata(self.BLOCK_LENGTH),
-            "bufferTime": self.getConfigdata(self.BUFFER_TIME),
-            "outputPath": self.getConfigdata(self.OUTPUT_PATH),
+            self.BLOCK_LENGTH: self.getConfigdata(self.BLOCK_LENGTH),
+            self.BUFFER_TIME: self.getConfigdata(self.BUFFER_TIME),
+            self.OUTPUT_PATH: self.getConfigdata(self.OUTPUT_PATH),
         }
         try:
             with open("dateiuebertragungsTool.ini", "w") as file:
