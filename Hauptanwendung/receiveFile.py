@@ -56,7 +56,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
                 break
             segmentNumber += 1
             utf8B64_blockData = value
-            logger.info("Segment %s empfangen: ", value[:25])
+            logger.info("Segment %s... empfangen: ", value[:25])
             #Text in B64 kodierten Binärdatenblock umwandeln
             binaryB64_blockData = utf8B64_blockData.encode('utf-8')
             #B64 kodierten Binärdatenblock B64 dekodieren
