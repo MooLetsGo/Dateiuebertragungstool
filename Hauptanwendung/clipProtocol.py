@@ -23,8 +23,9 @@ class clipProtocol:
     def start(self):
         try:
             pyperclip.copy(self.destinationString_Re + self.actionString_StartReceiving)
-        except:
+        except pyperclip.PyperclipException as pe:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.start() ***")
+            raise
         return self.wait()
         
     def proceed(self, data):
@@ -32,15 +33,17 @@ class clipProtocol:
             try:
                 pyperclip.copy(self.destinationString_Re + self.actionString_Proceed + ";"+data)
                 print("*** Datenblock in Zwischenablage kopiert ***")
-            except:
+            except pyperclip.PyperclipException as pe:
                 print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.proceed(toRe) ***")
+                raise
             return self.wait()
             
         else:
             try:
                 pyperclip.copy(self.destinationString_Se + self.actionString_Proceed)
-            except:
+            except pyperclip.PyperclipException as pe:
                 print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.proceed(toSe) ***")
+                raise
             return self.wait() 
         
     def wait(self):
@@ -49,8 +52,9 @@ class clipProtocol:
         time.sleep(self.configHandler.getConfigdata(configdataHandler.BUFFER_TIME))
         try:
             self.tmpClip = pyperclip.paste()
-        except:
+        except pyperclip.PyperclipException as pe:
             print("*** ERROR: Fehler beim lesen aus der Zwischenablage; ID=clipProtocol.wait() ***")
+            raise
         while True:
             if self.goSleep == True:
                 print("*** Local receiveFile Function went sleep ***")
@@ -58,13 +62,15 @@ class clipProtocol:
                 print("*** Local receiveFile Function woke up ***")
                 try:
                     pyperclip.copy("lootsgnugartrebeuietaD")
-                except:
+                except pyperclip.PyperclipException as pe:
                     print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.wait(initString) ***")
+                    raise
             if self.tmpClip == self.destinationString_Re + self.actionString_StartReceiving and self.sender == False:
                 try:
                     pyperclip.copy(self.destinationString_Se + self.actionString_StartSending)
-                except:
+                except pyperclip.PyperclipException as pe:
                     print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.wait(toSe) ***")
+                    raise
                 return self.wait()
             elif self.tmpClip == self.destinationString_Se + self.actionString_StartSending and self.sender == True:
                 break
@@ -77,15 +83,18 @@ class clipProtocol:
             elif self.tmpClip == self.destinationString_Re + self.actionString_Finish and self.sender == False:
                 try:
                     pyperclip.copy(self.destinationString_Se + self.actionString_Finish)
-                except:
+                except pyperclip.PyperclipException as pe:
                     print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clipProtocol.wait(toSe_finish) ***")
+                    raise
                 return "exit"
             else:
                 try:
                     self.tmpClip = pyperclip.waitForNewPaste(timeout=1)
-                except:
+                except pyperclip.PyperclipTimeoutException as toe:
                     self.tmpClip = pyperclip.paste()
                     print("*** pyperclip.waitForNewPaste() Timeout raised in clipProtocol.wait() ***")
+                except pyperclip.PyperclipException as pe:
+                    raise
         return ""
     
     def sleep(self):
@@ -102,7 +111,8 @@ class clipProtocol:
         try:
             print("*** Alle Segmente wurden versendet ***")
             pyperclip.copy(self.destinationString_Re + self.actionString_Finish)
-        except:
+        except pyperclip.PyperclipException as pe:
             print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=clip.Protocol.finish(toRe) ***")
+            raise
         self.wait()
         return
