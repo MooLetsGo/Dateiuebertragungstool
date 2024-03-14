@@ -3,9 +3,6 @@ import time
 import logging
 from configdataHandler import configdataHandler
 
-#receiveEvents_logger = logging.getLogger("receiveEvents_logger")
-#sendEvents_logger = logging.getLogger("sendEvents_logger"
-
 class clipProtocol:
     def __init__(self, isSender: bool, configHandler: configdataHandler, logger: logging.Logger):
         self.sender = isSender
@@ -32,7 +29,7 @@ class clipProtocol:
         except pyperclip.PyperclipException as pe:
             self.logger.exception("Fehler beim schreiben in die Zwischenablage")
             raise
-        self.logger.info("Übertragung starten: " + self.destinationString_Re + self.actionString_StartReceiving + " in die Zwischenablage geschrieben")
+        self.logger.info("Start Mitteilung in die Zwischenablage geschrieben: " + self.destinationString_Re + self.actionString_StartReceiving)
         return self.wait()
         
     def proceed(self, data):
@@ -42,7 +39,7 @@ class clipProtocol:
             except pyperclip.PyperclipException as pe:
                 self.logger.exception("Fehler beim schreiben in die Zwischenablage")
                 raise
-            self.logger.info("Proceed Mitteilung und Segment in die Zwischenablage geschrieben: " + self.destinationString_Re + self.actionString_Proceed + data[:30])
+            self.logger.info("Proceed Mitteilung und Segment in die Zwischenablage geschrieben: " + self.destinationString_Re + self.actionString_Proceed + ";" + data[:30])
             return self.wait()
             
         else:
