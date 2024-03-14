@@ -21,12 +21,12 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         #-----------------------Übertragung Startvorgang---------------------#
         value = protocol.wait()
         
-        configHandler.setConfigdata("tranmissionRuns",True)
+        configHandler.setConfigdata( configdataHandler.TRANSMISSION_RUNS,True)
         #----------------Init Variablen für configdata Werte-----------------#
-        outputPath = configHandler.getConfigdata("outputPath")
+        outputPath = configHandler.getConfigdata(configdataHandler.OUTPUT_PATH)
         blockLength = int(value)
-        if configHandler.getConfigdata("blockLength") != blockLength:
-            configHandler.setConfigdata("blockLength",blockLength)
+        if configHandler.getConfigdata(configdataHandler.BLOCK_LENGTH) != blockLength:
+            configHandler.setConfigdata(configdataHandler.BLOCK_LENGTH,blockLength)
         value = protocol.proceed(None)
 
         #-------------------Übertragung Datei Informationen------------------#
@@ -34,7 +34,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         value = protocol.proceed(None)
         checksumInput = value
         value = protocol.proceed(None)
-        configHandler.setConfigdata("segmentsToSend",int(value))
+        configHandler.setConfigdata(configdataHandler.SEGMENTS_TO_SEND,int(value))
         value = protocol.proceed(None)
 
         #--------------------Übertragung Inputfile Daten---------------------#
@@ -61,7 +61,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
             #Laufvariablen neu berechnen
             nextBlockPos = nextBlockPos + blockLength
             #Zuweisung von segmentNumber an configHandler.segmentsSended
-            configHandler.setConfigdata("segmentsSended",segmentNumber)
+            configHandler.setConfigdata(configdataHandler.SEGMENTS_SENDED,segmentNumber)
             #Warten auf nächstes Segment
             value = protocol.proceed(None)
             
@@ -74,4 +74,4 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
         else:
             print("*** ERROR: Uebertragene Datei ungleich Originaldatei ***")
 
-        configHandler.setConfigdata("transmissionRuns",False)
+        configHandler.setConfigdata(configdataHandler.TRANSMISSION_RUNS,False)

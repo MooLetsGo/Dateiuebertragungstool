@@ -46,7 +46,7 @@ class clipProtocol:
     def wait(self):
         print("*** Wait... ***")
         #Pufferzeit
-        time.sleep(self.configHandler.getConfigdata("bufferTime"))
+        time.sleep(self.configHandler.getConfigdata(configdataHandler.BUFFER_TIME))
         try:
             self.tmpClip = pyperclip.paste()
         except:
@@ -91,7 +91,7 @@ class clipProtocol:
     def sleep(self):
         while True:
             self.sleeps = True
-            if self.configHandler.getConfigdata("transmissionRuns") == False:
+            if self.configHandler.getConfigdata(configdataHandler.TRANSMISSION_RUNS) == False:
                 self.goSleep = False
                 self.sleeps = False
                 break

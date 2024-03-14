@@ -7,9 +7,9 @@ from configdataHandler import configdataHandler
 
 def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
     #----------------------------Init Variablen--------------------------#
-    inputFile = configHandler.getConfigdata("inputFile")
-    blockLength = configHandler.getConfigdata("blockLength")
-    segmentsToSend = configHandler.getConfigdata("segmentsToSend")
+    inputFile = configHandler.getConfigdata(configdataHandler.INPUT_FILE)
+    blockLength = configHandler.getConfigdata(configdataHandler.BLOCK_LENGTH)
+    segmentsToSend = configHandler.getConfigdata(configdataHandler.SEGMENTS_TO_SEND)
     nextBlockPos = 0
     segmentNumber = 0
     inputfileName = ""
@@ -60,10 +60,10 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         #B64 kodierten Binärdatenblock in Text umwandeln 
         utf8B64_blockData = binaryB64_blockData.decode('utf-8')
         #Zuweisung von segmentNumber an configHandler.segmentsSended
-        configHandler.setConfigdata("segmentsSended",segmentNumber)
+        configHandler.setConfigdata(configdataHandler.SEGMENTS_SENDED,segmentNumber)
         #B64 kodierten Textblock in die Zwischenablage schreiben
         protocol.proceed(utf8B64_blockData)
 
     print("*** Function sendFile() finished! ***")
-    configHandler.setConfigdata("transmissionRuns",False)
+    configHandler.setConfigdata(configdataHandler.TRANSMISSION_RUNS,False)
     return
