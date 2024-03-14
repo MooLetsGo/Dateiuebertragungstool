@@ -9,6 +9,7 @@ from configdataHandler import configdataHandler
 from clipProtocol import clipProtocol
 import math
 from functools import partial
+import logging
 
 
 class DateiuebertragungsTool:
@@ -170,6 +171,22 @@ class DateiuebertragungsTool:
         return
 
 def main():
+    logging.basicConfig(level=logging.INFO)
+    
+    sendEvents_logger = logging.getLogger("sendEvents_logger")
+    sendEvents_logger.propagate = False
+    sendEvents_logger_handler = logging.FileHandler("sendEvents.log")
+    sendEvents_logger_formatter = logging.Formatter("%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(levelname)s - %(message)s")
+    sendEvents_logger_handler.setFormatter(sendEvents_logger_formatter)
+    sendEvents_logger.addHandler(sendEvents_logger_handler)
+    
+    receiveEvents_logger = logging.getLogger("receiveEvents_logger")
+    receiveEvents_logger.propagate = False
+    receiveEvents_logger_handler = logging.FileHandler("receiveEvents.log")
+    receiveEvents_logger_formatter = logging.Formatter("%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(levelname)s - %(message)s")
+    receiveEvents_logger_handler.setFormatter(receiveEvents_logger_formatter)
+    receiveEvents_logger.addHandler(receiveEvents_logger_handler)
+    
     #---------------------------INI Datei Erstellen-----------------------#
     config = ConfigParser()
     #Initialisierungsdatei erstellen, wenn nicht vorhanden:
@@ -210,8 +227,8 @@ def main():
     #Objekt vom Typ "configdataHandler" initialisieren
     configHandler = configdataHandler(blockLength, bufferTime, outputPath)
     #Protokoll Instanzen für die sendFile() und receiveFile() Funktionen initialisieren
-    protocolSender = clipProtocol(True,configHandler)
-    protocolReceiver = clipProtocol(False,configHandler)
+    protocolSender = clipProtocol(True,configHandler,sendEvents_logger)
+    protocolReceiver = clipProtocol(False,configHandler,receiveEvents_logger)
     root = tk.Tk()
     dateiuebertragunsTool = DateiuebertragungsTool(root,configHandler,protocolSender,protocolReceiver)
     root.mainloop()
