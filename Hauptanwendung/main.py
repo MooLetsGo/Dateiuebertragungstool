@@ -176,14 +176,14 @@ def main():
     sendEvents_logger = logging.getLogger("sendEvents_logger")
     sendEvents_logger.propagate = False
     sendEvents_logger_handler = logging.FileHandler("sendEvents.log")
-    sendEvents_logger_formatter = logging.Formatter("%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(levelname)s - %(message)s")
+    sendEvents_logger_formatter = logging.Formatter("%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s")
     sendEvents_logger_handler.setFormatter(sendEvents_logger_formatter)
     sendEvents_logger.addHandler(sendEvents_logger_handler)
     
     receiveEvents_logger = logging.getLogger("receiveEvents_logger")
     receiveEvents_logger.propagate = False
     receiveEvents_logger_handler = logging.FileHandler("receiveEvents.log")
-    receiveEvents_logger_formatter = logging.Formatter("%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(levelname)s - %(message)s")
+    receiveEvents_logger_formatter = logging.Formatter("%(asctime)s - %(name)s - %(module)s - %(funcName)s - %(lineno)d - %(levelname)s - %(message)s")
     receiveEvents_logger_handler.setFormatter(receiveEvents_logger_formatter)
     receiveEvents_logger.addHandler(receiveEvents_logger_handler)
     
