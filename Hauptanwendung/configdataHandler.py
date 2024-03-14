@@ -44,21 +44,22 @@ class configdataHandler:
     
     def writeConfigToIni(self):
         config = ConfigParser()
-        config["SETTINGS"] = {
+        config[self.INI_FILE_CONFIG_NAME] = {
             self.BLOCK_LENGTH: self.getConfigdata(self.BLOCK_LENGTH),
             self.BUFFER_TIME: self.getConfigdata(self.BUFFER_TIME),
             self.OUTPUT_PATH: self.getConfigdata(self.OUTPUT_PATH),
         }
         try:
-            with open("dateiuebertragungsTool.ini", "w") as file:
+            with open(self.INI_FILE_NAME, "w") as file:
                 config.write(file)
                 return
-        except:
-            exit(1)
+        except Exception as e:
+            print("*** ERROR: INI-Datei konnte nicht aktualisiert werden ***")
+            raise
 
     def setConfigdata(self, configHandlerAttr: str, value):
         if configHandlerAttr not in self._CONFIG_HANDLER_ATTRIBUTES:
-            raise ValueError(f"Object doesnt have this attribute: {configHandlerAttr}")
+            raise ValueError(f"Configdata Handler Objekt hat kein solches Attribut: {configHandlerAttr}")
         with self.lock:
             setattr(self,configHandlerAttr,value)
         if configHandlerAttr in self._CONFIG_HANDLER_INI_ATTRIBUTES:
@@ -67,6 +68,6 @@ class configdataHandler:
 
     def getConfigdata(self, configHandlerAttr: str):
         if configHandlerAttr not in self._CONFIG_HANDLER_ATTRIBUTES:
-            raise ValueError(f"Object doesnt have this attribute: {configHandlerAttr}")
+            raise ValueError(f"Configdata Handler Objekt hat kein solches Attribut: {configHandlerAttr}")
         with self.lock:
             return getattr(self,configHandlerAttr)

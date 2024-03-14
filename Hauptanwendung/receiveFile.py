@@ -10,8 +10,9 @@ from configdataHandler import configdataHandler
 def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
     try:
         pyperclip.copy("lootsgnugartrebeuietaD")
-    except:
+    except pyperclip.PyperclipException:
         print("*** ERROR: Fehler beim schreiben in die Zwischenablage; ID=receiveFile(initString) ***")
+        raise
     while True:
         #----------------------------Init Variablen--------------------------#
         nextBlockPos = 0
