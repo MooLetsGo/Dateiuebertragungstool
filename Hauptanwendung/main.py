@@ -79,12 +79,9 @@ class DateiuebertragungsTool:
     def choose_file(self):
         file = filedialog.askopenfilename(title="Datei auswählen")
         if file == "":
-            print('*** INFO: Operation "choose Inputfile" was cancelled! ***')
             return
-        if file: 
-            print(f"Ausgewählte Datei: {file}")
         if not(os.path.exists(file)):
-            print('*** ERROR:  Input file ' + file +' does not exist! ***')
+            print('*** ERROR:  File ' + file +' does not exist! ***')
             exit(1)
         self.configHandler.setConfigdata(configdataHandler.INPUT_FILE, file)
         self.configHandler.setConfigdata(configdataHandler.SEGMENTS_TO_SEND, math.ceil(os.path.getsize(file)/self.configHandler.getConfigdata(configdataHandler.BLOCK_LENGTH)))
@@ -95,10 +92,9 @@ class DateiuebertragungsTool:
     def choose_filepath(self):
         filepath = filedialog.askdirectory(title="Dateipfad auswählen")
         if filepath == "":
-            print('*** INFO: Operation "choose Outputfilepath" was cancelled! ***')
             return
-        if not(os.path.exists(filepath)):
-            print('*** ERROR: Outputpath ' + filepath +' does not exist! ***')
+        if not os.path.exists(filepath):
+            print('*** ERROR: Filepath ' + filepath +' does not exist! ***')
             exit(1)
         self.configHandler.setConfigdata(configdataHandler.OUTPUT_PATH, filepath)
         self.updateLabel(configdataHandler.OUTPUT_PATH)
@@ -117,9 +113,10 @@ class DateiuebertragungsTool:
                     self.updateLabel(configdataHandler.SEGMENTS_TO_SEND)
                 else:
                     raise ValueError
-            except:
+            except ValueError as ve:
                 print("*** VALUE ERROR: Positive integer Number is needed ***")
-                return
+            except Exception as e:
+                raise
         elif configHandlerAttr == configdataHandler.BUFFER_TIME:
             try:
                 bufferTime = self.bufferTime_inputField.get()
@@ -127,12 +124,12 @@ class DateiuebertragungsTool:
                 if bufferTime > 0:
                     self.configHandler.setConfigdata(configHandlerAttr,bufferTime)
                     self.updateLabel(configdataHandler.BUFFER_TIME)
-                    return
                 else:
                     raise ValueError
-            except:
+            except ValueError as ve:
                 print("*** VALUE ERROR: Positive float Number is needed ***")
-                return
+            except Exception as e:
+                raise
         return
 
     def updateLabel(self, configAttr: str):
@@ -164,7 +161,7 @@ class DateiuebertragungsTool:
         #Lokalen Empfangsthread stoppen:
         self.protocolReceiver.goSleep = True
         while True:
-            if self.protocolReceiver.sleeps== True:
+            if self.protocolReceiver.sleeps == True:
                 break
         #Sendevorgang starten
         thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
@@ -181,32 +178,37 @@ def main():
         configdataHandler.BLOCK_LENGTH: 1048576,
         configdataHandler.BUFFER_TIME: 0.8,
         configdataHandler.OUTPUT_PATH:  os.path.join(os.path.expanduser("~")), 
-    }
-    try:
-        with open(configdataHandler.INI_FILE_NAME, "w") as file:
-            config.write(file)
-    except Exception as e:
-        print("*** Initialisierungsdatei konnte nicht erstellt werden ***")
-        raise 
+        }
+        try:
+            with open(configdataHandler.INI_FILE_NAME, "w") as file:
+                config.write(file)
+        except Exception as e:
+            print("*** Initialisierungsdatei konnte nicht erstellt werden ***")
+            raise 
+    
     
     #---------------configdataHandler Instanz initialiesieren-------------#
     #Default Settings aus INI Datei lesen 
     if os.path.isfile(configdataHandler.INI_FILE_NAME):
         config.read(configdataHandler.INI_FILE_NAME)
+        configData = config[configdataHandler.INI_FILE_CONFIG_NAME]
         try:
-            configData = config[configdataHandler.INI_FILE_CONFIG_NAME]
+            blockLength = int(configData[configdataHandler.BLOCK_LENGTH])
+            bufferTime = float(configData[configdataHandler.BUFFER_TIME])
+            if blockLength <= 0 or bufferTime <= 0:
+                raise ValueError
+            outputPath = str(configData[configdataHandler.OUTPUT_PATH])
+            if not os.path.exists(outputPath):
+                raise FileNotFoundError
+        except ValueError as ve:
+            print("*** VALUE WARNING: Werte der Initialisierungsparameter in INI-Datei können nicht verwendet werden ***")
+        except FileNotFoundError as fnfe:
+            print("*** FILE NOT FOUND WARNING: Pfad des Initialisierungsparameters 'outputPath' in INI-Datei existiert nicht ***")
         except Exception as e:
-            print("*** Konfigurationseinstellungen konnten nicht übernommen werden ***")
             raise
-        blockLength = int(configData[configdataHandler.BLOCK_LENGTH])
-        bufferTime = float(configData[configdataHandler.BUFFER_TIME])
-        outputPath = configData[configdataHandler.OUTPUT_PATH]
+
     #Objekt vom Typ "configdataHandler" initialisieren
-    try:
-        configHandler = configdataHandler(blockLength, bufferTime, outputPath)
-    except Exception as e:
-            print("*** Objekt vom Typ configdataHandler konnte nicht erstellt werden ***")
-            raise
+    configHandler = configdataHandler(blockLength, bufferTime, outputPath)
     #Protokoll Instanzen für die sendFile() und receiveFile() Funktionen initialisieren
     protocolSender = clipProtocol(True,configHandler)
     protocolReceiver = clipProtocol(False,configHandler)
