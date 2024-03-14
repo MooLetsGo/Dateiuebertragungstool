@@ -10,18 +10,6 @@ from clipProtocol import clipProtocol
 import math
 from functools import partial
 
-def generateIni():
-    config = ConfigParser()
-    config["SETTINGS"] = {
-        configdataHandler.BLOCK_LENGTH: 1048576,
-        configdataHandler.BUFFER_TIME: 0.8,
-        configdataHandler.OUTPUT_PATH:  os.path.join(os.path.expanduser("~")), 
-    }
-    try:
-        with open("dateiuebertragungsTool.ini", "w") as file:
-            config.write(file)
-    except:
-        exit(1)
 
 class DateiuebertragungsTool:
     def __init__(self,root,configHandler: configdataHandler, protocolSender: clipProtocol, protocolReceiver: clipProtocol):
@@ -86,14 +74,14 @@ class DateiuebertragungsTool:
         send_button = tk.Button(root, text="Senden", command=lambda: self.init_sending(), width=40, height=8)
         send_button.place(relx=0.95, rely=0.325, anchor=tk.E)
 
-    #--------------------------------Hilfsmethoden-----------------------------------#
+    #--------------------------------Methoden-----------------------------------#
 
     def choose_file(self):
         file = filedialog.askopenfilename(title="Datei auswählen")
         if file == "":
             print('*** INFO: Operation "choose Inputfile" was cancelled! ***')
             return
-        if file:
+        if file: 
             print(f"Ausgewählte Datei: {file}")
         if not(os.path.exists(file)):
             print('*** ERROR:  Input file ' + file +' does not exist! ***')
@@ -185,38 +173,45 @@ class DateiuebertragungsTool:
         return
 
 def main():
-    root = tk.Tk()
+    #---------------------------INI Datei Erstellen-----------------------#
+    config = ConfigParser()
     #Initialisierungsdatei erstellen, wenn nicht vorhanden:
-    if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/dateiuebertragungsTool.ini"):
-        try:
-            generateIni()
-        except:
-            print("*** ERROR: Initialisierungsdatei konnte nicht erstellt werden ***")
-            exit(1)
-
-    #Default Settings aus Initialisierungsdatei lesen und ein Objekt der Klasse "configdataHandler" damit initialisieren
+    if not os.path.exists(os.path.dirname(os.path.abspath(__file__)) + "/" + configdataHandler.INI_FILE_NAME):
+        config[configdataHandler.INI_FILE_CONFIG_NAME] = {
+        configdataHandler.BLOCK_LENGTH: 1048576,
+        configdataHandler.BUFFER_TIME: 0.8,
+        configdataHandler.OUTPUT_PATH:  os.path.join(os.path.expanduser("~")), 
+    }
     try:
-        if os.path.isfile("dateiuebertragungsTool.ini"):
-            config = ConfigParser()
-            config.read("dateiuebertragungsTool.ini")
-            try:
-                configData = config["SETTINGS"]
-            except:
-                print("*** Konfigurationseinstellungen konnten nicht übernommen werden ***")
-                exit(1)
-            blockLength = int(configData[configdataHandler.BLOCK_LENGTH])
-            bufferTime = float(configData[configdataHandler.BUFFER_TIME])
-            outputPath = configData[configdataHandler.OUTPUT_PATH]
-
-            configHandler = configdataHandler(blockLength, bufferTime, outputPath)
-    except:
-        print("*** ERROR: Objekt vom Typ configdataHandler konnte nicht erstellt werden ***")
-        exit(1)
+        with open(configdataHandler.INI_FILE_NAME, "w") as file:
+            config.write(file)
+    except Exception as e:
+        print("*** Initialisierungsdatei konnte nicht erstellt werden ***")
+        raise 
+    
+    #---------------configdataHandler Instanz initialiesieren-------------#
+    #Default Settings aus INI Datei lesen 
+    if os.path.isfile(configdataHandler.INI_FILE_NAME):
+        config.read(configdataHandler.INI_FILE_NAME)
+        try:
+            configData = config[configdataHandler.INI_FILE_CONFIG_NAME]
+        except Exception as e:
+            print("*** Konfigurationseinstellungen konnten nicht übernommen werden ***")
+            raise
+        blockLength = int(configData[configdataHandler.BLOCK_LENGTH])
+        bufferTime = float(configData[configdataHandler.BUFFER_TIME])
+        outputPath = configData[configdataHandler.OUTPUT_PATH]
+    #Objekt vom Typ "configdataHandler" initialisieren
+    try:
+        configHandler = configdataHandler(blockLength, bufferTime, outputPath)
+    except Exception as e:
+            print("*** Objekt vom Typ configdataHandler konnte nicht erstellt werden ***")
+            raise
     #Protokoll Instanzen für die sendFile() und receiveFile() Funktionen initialisieren
     protocolSender = clipProtocol(True,configHandler)
     protocolReceiver = clipProtocol(False,configHandler)
+    root = tk.Tk()
     dateiuebertragunsTool = DateiuebertragungsTool(root,configHandler,protocolSender,protocolReceiver)
     root.mainloop()
-
 if __name__ == '__main__':    
     main()

@@ -10,8 +10,10 @@ class configdataHandler:
     SEGMENTS_TO_SEND = "segmentsToSend"
     SEGMENTS_SENDED = "segmentsSended"
     TRANSMISSION_RUNS = "transmissionRuns"
+    INI_FILE_NAME = "dateiuebertragungsTool.ini"
+    INI_FILE_CONFIG_NAME = "SETTINGS"
 
-    CONFIG_HANDLER_ATTRIBUTES = {
+    _CONFIG_HANDLER_ATTRIBUTES = {
         BLOCK_LENGTH,
         BUFFER_TIME,
         INPUT_FILE,
@@ -19,9 +21,11 @@ class configdataHandler:
         SEGMENTS_TO_SEND,
         SEGMENTS_SENDED,
         TRANSMISSION_RUNS,
+        INI_FILE_NAME,
+        INI_FILE_CONFIG_NAME,
     }
 
-    CONFIG_HANDLER_INI_ATTRIBUTES ={
+    _CONFIG_HANDLER_INI_ATTRIBUTES ={
         BLOCK_LENGTH,
         BUFFER_TIME,
         OUTPUT_PATH,
@@ -53,16 +57,16 @@ class configdataHandler:
             exit(1)
 
     def setConfigdata(self, configHandlerAttr: str, value):
-        if configHandlerAttr not in self.CONFIG_HANDLER_ATTRIBUTES:
+        if configHandlerAttr not in self._CONFIG_HANDLER_ATTRIBUTES:
             raise ValueError(f"Object doesnt have this attribute: {configHandlerAttr}")
         with self.lock:
             setattr(self,configHandlerAttr,value)
-        if configHandlerAttr in self.CONFIG_HANDLER_INI_ATTRIBUTES:
+        if configHandlerAttr in self._CONFIG_HANDLER_INI_ATTRIBUTES:
             self.writeConfigToIni()
         return
 
     def getConfigdata(self, configHandlerAttr: str):
-        if configHandlerAttr not in self.CONFIG_HANDLER_ATTRIBUTES:
+        if configHandlerAttr not in self._CONFIG_HANDLER_ATTRIBUTES:
             raise ValueError(f"Object doesnt have this attribute: {configHandlerAttr}")
         with self.lock:
             return getattr(self,configHandlerAttr)
