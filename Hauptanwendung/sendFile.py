@@ -8,7 +8,6 @@ from configdataHandler import configdataHandler
 
 def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
     #----------------------------Init Variablen--------------------------#
-    logger = logging.getLogger("sendEvents_logger")
     inputFile = configHandler.getConfigdata(configdataHandler.INPUT_FILE)
     blockLength = configHandler.getConfigdata(configdataHandler.BLOCK_LENGTH)
     segmentsToSend = configHandler.getConfigdata(configdataHandler.SEGMENTS_TO_SEND)
@@ -17,12 +16,10 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
     inputfileName = ""
 
     #-----------------------Übertragung Startvorgang---------------------#
-    logger.info("Senden gestartet") 
     protocol.start()
     
     #-------------------Übertragung Datei Informationen------------------#
     #Vorgabe der Segmentgröße
-    logger.info("Segmentgroesse: %s an clipProtocol.proceed() uebergeben", blockLength)
     protocol.proceed(str(blockLength))
     #Ermittlung und Prüfung des Dateityps
     kind = filetype.guess(inputFile)
@@ -38,15 +35,12 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
     pathList = inputfileName.split('/')
     inputfileName = pathList[len(pathList)-1]
     outputFileName = inputfileName + inputfileType
-    logger.info("Outputfile Name: %s an clipProtocol.proceed() uebergeben", outputFileName)
     protocol.proceed(outputFileName)
     #Prüfsummenberechnung Inputfile
     with open(inputFile, 'rb') as binary_inputFile:
         binaryData = binary_inputFile.read()
         checksumInput = hashlib.sha256(binaryData).hexdigest()
-    logger.info("Pruefsumme Originaldatei: %s an clipProtocol.proceed() uebergeben", checksumInput)
     protocol.proceed(checksumInput)
-    logger.info("Segmentanzahl gesamt: %s an clipProtocol.proceed() uebergeben", segmentsToSend)
     protocol.proceed(str(segmentsToSend))
 
     #-------------------Übertragung Inputfile Daten---------------------#
@@ -58,7 +52,6 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
             binary_inputFile.seek(nextBlockPos,0)
             binary_blockData = binary_inputFile.read(blockLength)
             if not binary_blockData:
-                logger.info("Alle Segmente wurden versendet")
                 protocol.finish()
                 break
         #Laufvariablen neu berechnen
@@ -70,9 +63,9 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         #Zuweisung von segmentNumber an configHandler.segmentsSended
         configHandler.setConfigdata(configdataHandler.SEGMENTS_SENDED,segmentNumber)
         #B64 kodierten Textblock in die Zwischenablage schreiben
-        logger.info("Segment %s an clipProtocol.proceed() uebergeben", segmentNumber)
+        print("Segment %s an clipProtocol.proceed() uebergeben", segmentNumber)
         protocol.proceed(utf8B64_blockData)
 
-    logger.info("Senden beendet")
+    print("Senden beendet")
     configHandler.setConfigdata(configdataHandler.TRANSMISSION_RUNS,False)
     return
