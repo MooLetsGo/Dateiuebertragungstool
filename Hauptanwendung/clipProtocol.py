@@ -58,10 +58,9 @@ class clipProtocol:
         self.logger.info("clipProtocol.wait() betreten")
         #Pufferzeit
         time.sleep(self.configHandler.getConfigdata(configdataHandler.BUFFER_TIME))
-        loopCounter = 0
-        toeCounter = 0
-        wineCounter = 0
-        try:
+        
+        #Erprobungsversuch - Diesen Block weglassen / TmpClip mit Standardstring initialisieren
+        '''try:
             self.tmpClip = pyperclip.paste()
         except pyperclip.PyperclipWindowsException as wine:
             wineCounter += 1
@@ -75,8 +74,12 @@ class clipProtocol:
                 raise
         except pyperclip.PyperclipException as pe:
             self.logger.exception("Fehler beim lesen aus der Zwischenablage")
-            raise
+            raise'''
+        self.tmpClip = "ini"
 
+        loopCounter = 0
+        toeCounter = 0
+        wineCounter = 0
         while True:
             loopCounter += 1
             if self.configHandler.getConfigdata(configdataHandler.TRANSMISSION_RUNS) == True:
