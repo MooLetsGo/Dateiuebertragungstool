@@ -56,7 +56,7 @@ class clipProtocol:
         except pyperclip.PyperclipWindowsException as wine:
             wineCounter += 1
             if self.configHandler.getConfigdata(configdataHandler.TRANSMISSION_RUNS) == True:
-                print(f"PyperclipWindowsException: {str(wine)} raised zum %s. mal", wineCounter)
+                print(f"PyperclipWindowsException: {str(wine)} raised zum {str(wineCounter)}. mal")
             if wineCounter < 5:
                 time.sleep(1)
                 self.tmpClip = pyperclip.paste()
@@ -104,13 +104,13 @@ class clipProtocol:
                 except pyperclip.PyperclipTimeoutException as toe:
                     toeCounter += 1
                     if self.configHandler.getConfigdata(configdataHandler.TRANSMISSION_RUNS) == True:
-                        print(f"PyperclipTimeoutException: {str(toe)} raised zum %s. mal", toeCounter)
+                        print(f"PyperclipTimeoutException: {str(toe)} raised zum {str(toeCounter)}. mal")
                     self.tmpClip = pyperclip.paste()
                     print("*** pyperclip.waitForNewPaste() Timeout raised in clipProtocol.wait() ***")
                 except pyperclip.PyperclipWindowsException as wine:
                     wineCounter += 1
                     if self.configHandler.getConfigdata(configdataHandler.TRANSMISSION_RUNS) == True:
-                        print(f"PyperclipWindowsException: {str(wine)} raised zum %s. mal", wineCounter)
+                        print(f"PyperclipWindowsException: {str(wine)} raised zum {str(wineCounter)}. mal")
                     if wineCounter < 5:
                         time.sleep(1)
                         self.tmpClip = pyperclip.paste()

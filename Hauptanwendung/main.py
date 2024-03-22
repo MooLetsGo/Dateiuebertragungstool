@@ -159,11 +159,13 @@ class DateiuebertragungsTool:
             print("*** WARNING: No Inputfile selected! ***")
             return
         self.configHandler.setConfigdata(configdataHandler.TRANSMISSION_RUNS,True)
+        
         #Lokalen Empfangsthread stoppen:
         self.protocolReceiver.goSleep = True
         while True:
             if self.protocolReceiver.sleeps == True:
                 break
+        
         #Sendevorgang starten
         thread2 = threading.Thread(target=sendFile.sendFile, args=( self.configHandler, self.protocolSender))
         thread2.daemon = True
