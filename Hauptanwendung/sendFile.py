@@ -66,6 +66,7 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         print("Segment %s an clipProtocol.proceed() uebergeben", segmentNumber)
         protocol.proceed(utf8B64_blockData)
 
+    #-------------------------Übertragung Ende--------------------------#
     print("Senden beendet")
     configHandler.setConfigdata(configdataHandler.TRANSMISSION_RUNS,False)
     return
