@@ -1,1 +1,0 @@
-# Dateiübertragung funktioniert mit aktuellem Code nicht!
