@@ -63,7 +63,7 @@ def sendFile(configHandler: configdataHandler, protocol: clipProtocol):
         #Zuweisung von segmentNumber an configHandler.segmentsSended
         configHandler.setConfigdata(configdataHandler.SEGMENTS_SENDED,segmentNumber)
         #B64 kodierten Textblock in die Zwischenablage schreiben
-        print("Segment %s an clipProtocol.proceed() uebergeben", segmentNumber)
+        print(f"Segment {str(segmentNumber)} an clipProtocol.proceed() uebergeben")
         protocol.proceed(utf8B64_blockData)
 
     #-------------------------Übertragung Ende--------------------------#

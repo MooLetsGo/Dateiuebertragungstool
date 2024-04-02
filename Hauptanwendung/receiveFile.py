@@ -59,7 +59,7 @@ def receiveFile(configHandler: configdataHandler, protocol: clipProtocol):
             with open(outputPath + '/' + outputFileName, 'r+b') as outputFile: 
                 outputFile.seek(nextBlockPos,0)
                 outputFile.write(binary_blockData)
-            print("Segment %s in neue Datei geschrieben", segmentNumber)
+            print(f"Segment {str(segmentNumber)} in neue Datei geschrieben")
             #Laufvariablen neu berechnen
             nextBlockPos = nextBlockPos + blockLength
             #Zuweisung von segmentNumber an configHandler.segmentsSended
