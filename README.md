@@ -1,2 +1,3 @@
 # Dateiuebertragungstool
-Tool/ Anwendung, das Dateien über die Zwischenablage von Computern überträgt, die über RDP miteinander verbunden sind.
+Das Tool bietet eine Grundfunktionalität, um Dateien per Zwischenablage zu übertragen. Die Funktionen und Methoden müssen jedoch verbessert werden, um die Anwendung zuverlässiger und dadurch auch nutzbarer zu machen.
+
